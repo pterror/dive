@@ -13,7 +13,7 @@ import '../styles/global.css';
 	</head>
 	<body class="app">
     <aside class="app__sidebar">
-      <Sidebar client:load />
+      <Sidebar client:only="vue" />
     </aside>
     <main class="app__main">
       <slot />

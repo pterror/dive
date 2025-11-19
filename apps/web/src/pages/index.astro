@@ -1,10 +1,8 @@
-```
 ---
 import MainLayout from '../layouts/MainLayout.astro';
-import { Canvas } from '@dive/canvas-vue';
+import { FileBrowser } from '@dive/plugin-file-browser';
 ---
 
 <MainLayout>
-  <Canvas client:only="vue" />
+  <FileBrowser client:only="vue" />
 </MainLayout>
-```

@@ -2,6 +2,10 @@
   "name": "@dive/core",
   "version": "0.0.1",
   "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./db": "./src/db/client.ts"
+  },
   "scripts": {
     "build": "tsc"
   },

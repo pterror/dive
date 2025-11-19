@@ -27,4 +27,5 @@
 
 ## Locations
 - **Design Docs**: `docs/design/` (Update `design_decisions.md` when making significant architectural choices).
+- **Style Guide**: `docs/style.md` (Follow TypeScript `readonly` preferences).
 - **Workflows**: `.agent/workflows/`

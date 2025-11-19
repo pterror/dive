@@ -1,21 +1,21 @@
 import type { App, Component } from 'vue';
 
 export interface ObjectType {
-  name: string;
-  icon?: string;
+  readonly name: string;
+  readonly icon?: string;
   // Schema validation, etc.
 }
 
 export interface ViewComponent {
-  name: string;
-  component: Component;
-  supports: string[]; // Object types this view supports
+  readonly name: string;
+  readonly component: Component;
+  readonly supports: readonly string[]; // Object types this view supports
 }
 
 export interface Plugin {
-  name: string;
-  version: string;
-  types?: ObjectType[];
-  views?: ViewComponent[];
-  init?: (app: App) => void;
+  readonly name: string;
+  readonly version: string;
+  readonly types?: readonly ObjectType[];
+  readonly views?: readonly ViewComponent[];
+  readonly init?: (app: App) => void;
 }

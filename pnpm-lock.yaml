@@ -23,12 +23,18 @@ importers:
       '@dive/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@dive/plugin-file-browser':
+        specifier: workspace:*
+        version: link:../../plugins/file-browser
       '@dive/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       astro:
         specifier: ^5.0.0
         version: 5.15.9(@types/node@24.10.1)(rollup@4.53.3)(typescript@5.9.3)(yaml@2.8.1)
+      pinia:
+        specifier: ^2.3.1
+        version: 2.3.1(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3))
       vue:
         specifier: ^3.5.24
         version: 3.5.24(typescript@5.9.3)
@@ -79,6 +85,28 @@ importers:
 
   packages/ui:
     dependencies:
+      vue:
+        specifier: ^3.3.0
+        version: 3.5.24(typescript@5.9.3)
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.4.1(@types/node@24.10.1)(yaml@2.8.1)
+      vue-tsc:
+        specifier: ^2.0.0
+        version: 2.2.12(typescript@5.9.3)
+
+  plugins/file-browser:
+    dependencies:
+      '@dive/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@dive/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       vue:
         specifier: ^3.3.0
         version: 3.5.24(typescript@5.9.3)
