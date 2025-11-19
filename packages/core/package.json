@@ -1,0 +1,16 @@
+{
+  "name": "@dive/core",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.0.0",
+    "pinia": "^2.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/better-sqlite3": "^7.6.0"
+  }
+}
