@@ -1,0 +1,30 @@
+# Agent Guidance & Project Context
+
+## Tech Stack
+- **Framework**: Astro (Host) + Vue (Interactive Islands/Plugins).
+- **Styling**: Vanilla CSS (BEM methodology).
+- **Desktop**: Electron (Planned wrapper for `apps/web`).
+- **Package Manager**: `pnpm` (Workspaces).
+- **Database**: SQLite (`better-sqlite3`) - Centralized, server-side (Node.js).
+
+## Architecture: Modular Plugin System
+- **Monorepo Structure**:
+  - `apps/web`: Main entry point, handles routing, layout, and plugin loading.
+  - `packages/core`: Shared types, Database client, Plugin registry/interface.
+  - `packages/ui`: Shared Vue design system components.
+  - `packages/canvas`: **Pure TypeScript** infinite canvas logic (Coordinate system, Node management). Framework agnostic.
+  - `packages/canvas-vue`: Vue components that render `packages/canvas` state.
+  - `plugins/*`: Granular features.
+    - `plugins/markdown`: Text editing.
+    - `plugins/canvas`: Whiteboard/Spatial view (uses `packages/canvas-vue`).
+    - `plugins/image`: Image viewer.
+    - `plugins/video`: Video player.
+
+## Core Concepts
+- **The "Object"**: Fundamental unit of data (File, Note, Link, etc.).
+- **Navigation**: Tag-based > Folder-based.
+- **Canvas**: Should be simple initially but extensible enough for future Node Graph/Flowchart plugins.
+
+## Locations
+- **Design Docs**: `docs/design/` (Update `design_decisions.md` when making significant architectural choices).
+- **Workflows**: `.agent/workflows/`

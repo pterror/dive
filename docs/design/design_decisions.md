@@ -3,8 +3,8 @@
 ## Tech Stack
 - **Framework**: Astro + Vue
   - *Reasoning*: User preference. Astro handles static content well and allows for island architecture, while Vue is great for the interactive "editor" parts.
-- **Styling**: TailwindCSS
-  - *Reasoning*: Rapid development, consistent design system.
+- **Styling**: Vanilla CSS (BEM)
+  - *Reasoning*: User preference for simplicity and maintainability without build steps.
 - **Desktop Wrapper**: Electron (Planned)
   - *Reasoning*: User mentioned it. Allows local file system access which is crucial for a "File browser" feature.
 
