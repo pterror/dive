@@ -7,7 +7,11 @@
 - **Package Manager**: `pnpm` (Workspaces).
 - **Database**: SQLite (`better-sqlite3`) - Centralized, server-side (Node.js).
 
-## Architecture: Modular Plugin System
+## Dive: Modular Knowledge Editor
+
+## Fundamental Goal
+**To build a modular editor/viewer for arbitrary information.**
+The system is designed to be agnostic to the type of data it manages, using a plugin architecture to provide specialized viewers and editors for different "objects" (files, notes, images, canvas graphs, etc.) while maintaining a unified, tag-based organization system.
 - **Monorepo Structure**:
   - `apps/web`: Main entry point, handles routing, layout, and plugin loading.
   - `packages/core`: Shared types, Database client, Plugin registry/interface.

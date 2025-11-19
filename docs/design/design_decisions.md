@@ -1,5 +1,9 @@
 # Design Decisions
 
+## Fundamental Goal
+**To build a modular editor/viewer for arbitrary information.**
+We prioritize flexibility and extensibility. The core application is a shell that manages state and data persistence, while features are implemented as granular plugins.
+
 ## Tech Stack
 - **Framework**: Astro + Vue
   - *Reasoning*: User preference. Astro handles static content well and allows for island architecture, while Vue is great for the interactive "editor" parts.
