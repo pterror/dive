@@ -1,8 +1,8 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
-import { FileBrowser } from '@dive/plugin-file-browser';
+import MainContent from '../components/MainContent.vue';
 ---
 
 <MainLayout>
-  <FileBrowser client:only="vue" />
+  <MainContent client:only="vue" />
 </MainLayout>

@@ -14,18 +14,21 @@ importers:
 
   apps/web:
     dependencies:
-      '@astrojs/vue':
-        specifier: ^5.1.3
-        version: 5.1.3(@types/node@24.10.1)(astro@5.15.9(@types/node@24.10.1)(rollup@4.53.3)(typescript@5.9.3)(yaml@2.8.1))(rollup@4.53.3)(vue@3.5.24(typescript@5.9.3))(yaml@2.8.1)
       '@dive/canvas-vue':
         specifier: workspace:*
         version: link:../../packages/canvas-vue
       '@dive/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@dive/plugin-canvas':
+        specifier: workspace:*
+        version: link:../../plugins/canvas
       '@dive/plugin-file-browser':
         specifier: workspace:*
         version: link:../../plugins/file-browser
+      '@dive/plugin-markdown':
+        specifier: workspace:*
+        version: link:../../plugins/markdown
       '@dive/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -38,6 +41,13 @@ importers:
       vue:
         specifier: ^3.5.24
         version: 3.5.24(typescript@5.9.3)
+    devDependencies:
+      '@astrojs/vue':
+        specifier: ^5.0.0
+        version: 5.1.3(@types/node@24.10.1)(astro@5.15.9(@types/node@24.10.1)(rollup@4.53.3)(typescript@5.9.3)(yaml@2.8.1))(rollup@4.53.3)(vue@3.5.24(typescript@5.9.3))(yaml@2.8.1)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
 
   packages/canvas:
     devDependencies:
@@ -99,6 +109,28 @@ importers:
         specifier: ^2.0.0
         version: 2.2.12(typescript@5.9.3)
 
+  plugins/canvas:
+    dependencies:
+      '@dive/canvas-vue':
+        specifier: workspace:*
+        version: link:../../packages/canvas-vue
+      '@dive/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      vue:
+        specifier: ^3.3.0
+        version: 3.5.24(typescript@5.9.3)
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.4.1(@types/node@24.10.1)(yaml@2.8.1)
+      vue-tsc:
+        specifier: ^2.0.0
+        version: 2.2.12(typescript@5.9.3)
+
   plugins/file-browser:
     dependencies:
       '@dive/core':
@@ -107,6 +139,31 @@ importers:
       '@dive/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      vue:
+        specifier: ^3.3.0
+        version: 3.5.24(typescript@5.9.3)
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.4.1(@types/node@24.10.1)(yaml@2.8.1)
+      vue-tsc:
+        specifier: ^2.0.0
+        version: 2.2.12(typescript@5.9.3)
+
+  plugins/markdown:
+    dependencies:
+      '@dive/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@dive/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      marked:
+        specifier: ^11.0.0
+        version: 11.2.0
       vue:
         specifier: ^3.3.0
         version: 3.5.24(typescript@5.9.3)
@@ -1415,6 +1472,11 @@ packages:
 
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
+
+  marked@11.2.0:
+    resolution: {integrity: sha512-HR0m3bvu0jAPYiIvLUUQtdg1g6D247//lvcekpHO1WMvbwDlwSkZAX9Lw4F4YHE1T0HaaNve0tuAWuV1UJ6vtw==}
+    engines: {node: '>= 18'}
+    hasBin: true
 
   mdast-util-definitions@6.0.0:
     resolution: {integrity: sha512-scTllyX6pnYNZH/AIp/0ePz6s4cZtARxImwoPJ7kS42n+MnVsI4XbnG6d4ibehRIldYMWM2LD7ImQblVhUejVQ==}
@@ -3664,6 +3726,8 @@ snapshots:
       source-map-js: 1.2.1
 
   markdown-table@3.0.4: {}
+
+  marked@11.2.0: {}
 
   mdast-util-definitions@6.0.0:
     dependencies:

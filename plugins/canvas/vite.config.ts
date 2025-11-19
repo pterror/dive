@@ -7,8 +7,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'DivePluginFileBrowser',
-      fileName: (format) => `dive-plugin-file-browser.${format}.js`
+      name: 'DivePluginCanvas',
+      fileName: (format) => `dive-plugin-canvas.${format}.js`
     }
   }
 });
