@@ -42,6 +42,16 @@ export class PluginRegistry {
   getViewsForType(type: string): ViewComponent[] {
     return this.views.get(type) || [];
   }
+
+  getPluginForType(type: string): Plugin | undefined {
+    // Find a plugin that supports this type via its views
+    for (const [, plugin] of this.plugins.entries()) {
+      if (plugin.views?.some(view => view.supports.includes(type))) {
+        return plugin;
+      }
+    }
+    return undefined;
+  }
 }
 
 export const registry = new PluginRegistry();

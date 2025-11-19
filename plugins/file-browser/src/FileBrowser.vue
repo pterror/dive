@@ -2,9 +2,10 @@
 import { ref, onMounted, computed } from 'vue';
 import type { FileObject } from './types';
 import { Button } from '@dive/ui';
-import { useSearchStore } from '@dive/core';
+import { useSearchStore, useWorkspaceStore } from '@dive/core';
 
 const searchStore = useSearchStore();
+const workspaceStore = useWorkspaceStore();
 const files = ref<readonly FileObject[]>([]);
 const currentPath = ref('/');
 
@@ -13,6 +14,8 @@ const mockFiles: readonly FileObject[] = [
   { id: '1', name: 'Documents', path: '/Documents', isDirectory: true, updatedAt: Date.now() },
   { id: '2', name: 'Images', path: '/Images', isDirectory: true, updatedAt: Date.now() },
   { id: '3', name: 'notes.md', path: '/notes.md', isDirectory: false, size: 1024, updatedAt: Date.now() },
+  { id: '4', name: 'photo.jpg', path: '/photo.jpg', isDirectory: false, size: 2048, updatedAt: Date.now() },
+  { id: '5', name: 'video.mp4', path: '/video.mp4', isDirectory: false, size: 4096, updatedAt: Date.now() },
 ];
 
 const filteredFiles = computed(() => {
@@ -25,6 +28,14 @@ onMounted(() => {
   files.value = mockFiles;
 });
 
+function getFileType(filename: string): string {
+  const ext = filename.split('.').pop()?.toLowerCase() || '';
+  if (['md', 'markdown'].includes(ext)) return 'markdown';
+  if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) return 'image';
+  if (['mp4', 'webm'].includes(ext)) return 'video';
+  return 'text';
+}
+
 function navigate(file: FileObject) {
   if (file.isDirectory) {
     currentPath.value = file.path;
@@ -32,6 +43,12 @@ function navigate(file: FileObject) {
     console.log('Navigating to', file.path);
   } else {
     console.log('Opening file', file.path);
+    workspaceStore.openObject({
+      id: file.id,
+      type: getFileType(file.name),
+      name: file.name,
+      path: file.path
+    });
   }
 }
 </script>
