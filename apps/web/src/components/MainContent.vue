@@ -3,6 +3,10 @@ import { ref } from 'vue';
 import { FileBrowser } from '@dive/plugin-file-browser';
 import { MarkdownEditor } from '@dive/plugin-markdown';
 import { Canvas } from '@dive/plugin-canvas';
+import { ImageViewer } from '@dive/plugin-image';
+import { VideoPlayer } from '@dive/plugin-video';
+import { HistoryView } from '@dive/plugin-history';
+import { CalendarView } from '@dive/plugin-calendar';
 
 const activeTab = ref('files');
 </script>
@@ -25,6 +29,26 @@ const activeTab = ref('files');
         :class="{ 'tabs__tab--active': activeTab === 'canvas' }"
         @click="activeTab = 'canvas'"
       >Canvas</button>
+      <button 
+        class="tabs__tab" 
+        :class="{ 'tabs__tab--active': activeTab === 'image' }"
+        @click="activeTab = 'image'"
+      >Image</button>
+      <button 
+        class="tabs__tab" 
+        :class="{ 'tabs__tab--active': activeTab === 'video' }"
+        @click="activeTab = 'video'"
+      >Video</button>
+      <button 
+        class="tabs__tab" 
+        :class="{ 'tabs__tab--active': activeTab === 'history' }"
+        @click="activeTab = 'history'"
+      >History</button>
+      <button 
+        class="tabs__tab" 
+        :class="{ 'tabs__tab--active': activeTab === 'calendar' }"
+        @click="activeTab = 'calendar'"
+      >Calendar</button>
     </div>
 
     <div class="content-area">
@@ -36,6 +60,18 @@ const activeTab = ref('files');
       </div>
       <div v-if="activeTab === 'canvas'" class="content-area__pane">
         <Canvas />
+      </div>
+      <div v-if="activeTab === 'image'" class="content-area__pane">
+        <ImageViewer />
+      </div>
+      <div v-if="activeTab === 'video'" class="content-area__pane">
+        <VideoPlayer />
+      </div>
+      <div v-if="activeTab === 'history'" class="content-area__pane">
+        <HistoryView />
+      </div>
+      <div v-if="activeTab === 'calendar'" class="content-area__pane">
+        <CalendarView />
       </div>
     </div>
   </div>

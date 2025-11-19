@@ -20,15 +20,27 @@ importers:
       '@dive/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@dive/plugin-calendar':
+        specifier: workspace:*
+        version: link:../../plugins/calendar
       '@dive/plugin-canvas':
         specifier: workspace:*
         version: link:../../plugins/canvas
       '@dive/plugin-file-browser':
         specifier: workspace:*
         version: link:../../plugins/file-browser
+      '@dive/plugin-history':
+        specifier: workspace:*
+        version: link:../../plugins/history
+      '@dive/plugin-image':
+        specifier: workspace:*
+        version: link:../../plugins/image
       '@dive/plugin-markdown':
         specifier: workspace:*
         version: link:../../plugins/markdown
+      '@dive/plugin-video':
+        specifier: workspace:*
+        version: link:../../plugins/video
       '@dive/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -109,6 +121,28 @@ importers:
         specifier: ^2.0.0
         version: 2.2.12(typescript@5.9.3)
 
+  plugins/calendar:
+    dependencies:
+      '@dive/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@dive/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      vue:
+        specifier: ^3.3.0
+        version: 3.5.24(typescript@5.9.3)
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.4.1(@types/node@24.10.1)(yaml@2.8.1)
+      vue-tsc:
+        specifier: ^2.0.0
+        version: 2.2.12(typescript@5.9.3)
+
   plugins/canvas:
     dependencies:
       '@dive/canvas-vue':
@@ -153,6 +187,50 @@ importers:
         specifier: ^2.0.0
         version: 2.2.12(typescript@5.9.3)
 
+  plugins/history:
+    dependencies:
+      '@dive/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@dive/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      vue:
+        specifier: ^3.3.0
+        version: 3.5.24(typescript@5.9.3)
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.4.1(@types/node@24.10.1)(yaml@2.8.1)
+      vue-tsc:
+        specifier: ^2.0.0
+        version: 2.2.12(typescript@5.9.3)
+
+  plugins/image:
+    dependencies:
+      '@dive/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@dive/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      vue:
+        specifier: ^3.3.0
+        version: 3.5.24(typescript@5.9.3)
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.4.1(@types/node@24.10.1)(yaml@2.8.1)
+      vue-tsc:
+        specifier: ^2.0.0
+        version: 2.2.12(typescript@5.9.3)
+
   plugins/markdown:
     dependencies:
       '@dive/core':
@@ -164,6 +242,28 @@ importers:
       marked:
         specifier: ^11.0.0
         version: 11.2.0
+      vue:
+        specifier: ^3.3.0
+        version: 3.5.24(typescript@5.9.3)
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.4.1(@types/node@24.10.1)(yaml@2.8.1)
+      vue-tsc:
+        specifier: ^2.0.0
+        version: 2.2.12(typescript@5.9.3)
+
+  plugins/video:
+    dependencies:
+      '@dive/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@dive/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       vue:
         specifier: ^3.3.0
         version: 3.5.24(typescript@5.9.3)

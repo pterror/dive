@@ -12,9 +12,13 @@
   "dependencies": {
     "@dive/canvas-vue": "workspace:*",
     "@dive/core": "workspace:*",
+    "@dive/plugin-calendar": "workspace:*",
     "@dive/plugin-canvas": "workspace:*",
     "@dive/plugin-file-browser": "workspace:*",
+    "@dive/plugin-history": "workspace:*",
+    "@dive/plugin-image": "workspace:*",
     "@dive/plugin-markdown": "workspace:*",
+    "@dive/plugin-video": "workspace:*",
     "@dive/ui": "workspace:*",
     "astro": "^5.0.0",
     "pinia": "^2.3.1",
