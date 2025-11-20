@@ -78,7 +78,7 @@ const activeTab = computed({
         </div>
       </div>
       <div class="main-content__actions">
-        <button @click="showInfo = !showInfo" class="main-content__action-btn">
+        <button @click="showInfo = !showInfo" class="btn-icon">
           {{ showInfo ? 'Hide Info' : 'Info' }}
         </button>
       </div>
@@ -137,9 +137,8 @@ const activeTab = computed({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  padding-right: 1rem;
+  /* Border removed */
+  padding: 0.5rem 1.5rem 0.5rem 0;
 }
 
 .main-content__tabs {
@@ -150,7 +149,7 @@ const activeTab = computed({
 .main-content__tab {
   padding: 0.75rem 1rem;
   cursor: pointer;
-  border-right: 1px solid var(--color-border);
+  /* Border removed */
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -195,8 +194,11 @@ const activeTab = computed({
 .main-content__info {
   width: 300px;
   background-color: var(--color-surface);
-  border-left: 1px solid var(--color-border);
+  /* Border removed, using shadow/bg for separation */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 0.5rem;
   overflow-y: auto;
+  margin: 1rem 1rem 1rem 0;
 }
 
 .info-panel__header {
@@ -238,12 +240,5 @@ const activeTab = computed({
   color: var(--color-text-muted);
 }
 
-.main-content__action-btn {
-  padding: 0.25rem 0.75rem;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  border-radius: 0.25rem;
-  cursor: pointer;
-  font-size: 0.875rem;
-}
+/* Action btn styles moved to global.css (.btn-icon) */
 </style>

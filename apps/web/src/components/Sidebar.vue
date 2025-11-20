@@ -16,14 +16,16 @@ const items = ref([
 
 <template>
   <div class="sidebar">
-    <h1 class="sidebar__title">Dive</h1>
+    <div class="sidebar__header">
+      <h1 class="sidebar__title">Dive</h1>
+    </div>
     
     <div class="sidebar__search">
       <input 
         type="text" 
         v-model="searchStore.query" 
         placeholder="Search..." 
-        class="sidebar__search-input"
+        class="input"
       />
     </div>
 
@@ -55,17 +57,16 @@ const items = ref([
 
 <style scoped>
 .sidebar {
-  width: 250px;
-  height: 100%;
-  background-color: var(--color-surface);
-  border-right: 1px solid var(--color-border);
+  /* Width/Height/Bg handled by container (.app__sidebar) */
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
+  gap: 1rem;
+  padding: 1rem;
 }
 
 .sidebar__header {
-  padding: 1rem;
-  border-bottom: 1px solid var(--color-border);
+  /* Removed border-bottom */
+  padding: 0; /* Padding handled by container gap/padding */
 }
 
 .sidebar__title {
@@ -76,24 +77,13 @@ const items = ref([
 }
 
 .sidebar__search {
-  padding: 1rem;
+  padding: 0; /* Reset padding */
 }
 
-.sidebar__search-input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.375rem;
-  background-color: var(--color-background);
-  color: var(--color-text);
-}
-
-.sidebar__search-input:focus {
-  outline: 2px solid var(--color-primary);
-  border-color: transparent;
-}
+/* Input styles moved to global.css (.input) */
 
 .sidebar__nav {
+  display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
@@ -111,20 +101,24 @@ const items = ref([
 }
 
 .sidebar__item:hover {
-  background-color: var(--color-surface-hover);
+  background-color: var(--color-sidebar-hover);
 }
 
 .sidebar__item--active {
-  background-color: var(--color-surface-hover);
+  background-color: var(--color-sidebar-hover);
   font-weight: 600;
 }
 
 .sidebar__item--empty {
-  margin-top: 2rem;
+  margin-top: 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  padding: 0 0.75rem;
 }
 
 .sidebar__section {
-  margin-top: 2rem;
+  margin-top: 1rem;
+  padding: 0; /* Reset padding */
 }
 
 .sidebar__section-title {
@@ -133,6 +127,7 @@ const items = ref([
   color: #6b7280;
   margin-bottom: 0.5rem;
   font-weight: 600;
+  padding: 0 0.75rem; /* Align with items */
 }
 
 .sidebar__tags {

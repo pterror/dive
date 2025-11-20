@@ -23,8 +23,8 @@ import MainContent from './MainContent.vue';
 }
 
 .app__sidebar {
-  width: 250px;
-  border-right: 1px solid var(--color-border);
+  width: 32ch; /* Approx 250px-300px depending on font */
+  /* Border removed */
   display: flex;
   flex-direction: column;
   background-color: var(--color-sidebar-bg);
@@ -34,7 +34,5 @@ import MainContent from './MainContent.vue';
   flex: 1;
   position: relative;
   overflow: hidden;
-  padding: 1rem;
-  background-color: var(--color-background);
 }
 </style>
