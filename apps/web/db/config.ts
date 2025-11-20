@@ -7,6 +7,7 @@ const Objects = defineTable({
     name: column.text(),
     path: column.text({ optional: true }),
     content: column.json({ optional: true }),
+    properties: column.json({ optional: true }),
     created_at: column.number({ default: Math.floor(Date.now() / 1000) }),
     updated_at: column.number({ default: Math.floor(Date.now() / 1000) }),
   }

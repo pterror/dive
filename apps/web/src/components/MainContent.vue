@@ -8,6 +8,8 @@ import { ImageViewer } from '@dive/plugin-image';
 import { VideoPlayer } from '@dive/plugin-video';
 import { HistoryView } from '@dive/plugin-history';
 import { CalendarView } from '@dive/plugin-calendar';
+import TagManager from './TagManager.vue';
+import PropertiesPanel from './PropertiesPanel.vue';
 
 const workspaceStore = useWorkspaceStore();
 
@@ -113,6 +115,7 @@ const activeTab = computed({
             <p><strong>Type:</strong> {{ workspaceStore.activeObject.type }}</p>
             <p><strong>Path:</strong> {{ workspaceStore.activeObject.path }}</p>
           </div>
+          <PropertiesPanel :object-id="workspaceStore.activeObject.id" />
           <TagManager :object-id="workspaceStore.activeObject.id" />
         </div>
       </aside>

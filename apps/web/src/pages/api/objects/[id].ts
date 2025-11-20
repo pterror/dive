@@ -30,10 +30,11 @@ export const PUT: APIRoute = async ({ params, request }) => {
 
   try {
     const body = await request.json();
-    // Update content and updated_at
+    // Update content, properties, and updated_at
     await db.update(Objects)
       .set({ 
         content: body.content,
+        properties: body.properties,
         updated_at: Math.floor(Date.now() / 1000)
       })
       .where(eq(Objects.id, id));
