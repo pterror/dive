@@ -1,8 +1,8 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
-import MainContent from '../components/MainContent.vue';
+import App from '../components/App.vue';
 ---
 
 <MainLayout>
-  <MainContent client:only="vue" />
+  <App client:only="vue" />
 </MainLayout>

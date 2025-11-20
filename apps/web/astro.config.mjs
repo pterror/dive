@@ -8,5 +8,10 @@ export default defineConfig({
   adapter: node({
     mode: 'standalone'
   }),
-  integrations: [vue(), db()]
+  integrations: [
+    vue({
+      appEntrypoint: '/src/_app.ts'
+    }),
+    db()
+  ]
 });

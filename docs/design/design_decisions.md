@@ -15,6 +15,8 @@ We prioritize flexibility and extensibility. The core application is a shell tha
 ## Architecture
 - **Pattern**: Modular Plugin System (Monorepo)
   - **Core**: Handles DB connection, global state, routing, and UI shell.
+  - **Single App Mode**: The main interface is a single Vue app (`<App />`) mounted by Astro.
+    - *Reasoning*: Ensures a single Pinia instance for shared state across Sidebar, MainContent, and Plugins.
   - **Packages**:
     - `canvas`: Pure TS logic for infinite canvas.
     - `canvas-vue`: Vue components for canvas.

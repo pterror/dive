@@ -1,5 +1,4 @@
 ---
-import Sidebar from '../components/Sidebar.vue';
 import '../styles/global.css';
 ---
 
@@ -12,34 +11,16 @@ import '../styles/global.css';
 		<title>Dive</title>
 	</head>
 	<body class="app">
-    <aside class="app__sidebar">
-      <Sidebar client:only="vue" />
-    </aside>
-    <main class="app__main">
+    <div class="layout-shell">
       <slot />
-    </main>
+    </div>
 	</body>
 </html>
 
 <style>
-.app {
-  display: flex;
-  height: 100vh;
+.layout-shell {
   width: 100vw;
-  overflow: hidden;
-}
-
-.app__sidebar {
-  width: 250px;
-  border-right: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-sidebar-bg);
-}
-
-.app__main {
-  flex: 1;
-  position: relative;
+  height: 100vh;
   overflow: hidden;
 }
 </style>
