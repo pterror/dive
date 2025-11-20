@@ -9,23 +9,33 @@ const workspaceStore = useWorkspaceStore();
 const files = ref<readonly FileObject[]>([]);
 const currentPath = ref('/');
 
-// Mock data for now
-const mockFiles: readonly FileObject[] = [
-  { id: '1', name: 'Documents', path: '/Documents', isDirectory: true, updatedAt: Date.now() },
-  { id: '2', name: 'Images', path: '/Images', isDirectory: true, updatedAt: Date.now() },
-  { id: '3', name: 'notes.md', path: '/notes.md', isDirectory: false, size: 1024, updatedAt: Date.now() },
-  { id: '4', name: 'photo.jpg', path: '/photo.jpg', isDirectory: false, size: 2048, updatedAt: Date.now() },
-  { id: '5', name: 'video.mp4', path: '/video.mp4', isDirectory: false, size: 4096, updatedAt: Date.now() },
-];
-
 const filteredFiles = computed(() => {
   if (!searchStore.query) return files.value;
   const q = searchStore.query.toLowerCase();
   return files.value.filter(f => f.name.toLowerCase().includes(q));
 });
 
+async function fetchFiles() {
+  try {
+    const res = await fetch('/api/objects');
+    if (res.ok) {
+      const data = await res.json();
+      // Map DB objects to FileObjects
+      files.value = data.map((obj: any) => ({
+        id: obj.id,
+        name: obj.name,
+        path: obj.path,
+        isDirectory: obj.type === 'folder',
+        updatedAt: obj.updated_at * 1000
+      }));
+    }
+  } catch (e) {
+    console.error('Failed to fetch files:', e);
+  }
+}
+
 onMounted(() => {
-  files.value = mockFiles;
+  fetchFiles();
 });
 
 function getFileType(filename: string): string {
