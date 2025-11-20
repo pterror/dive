@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useTagStore, useSearchStore } from '@dive/core';
 
 const tagStore = useTagStore();
+const { tags } = storeToRefs(tagStore);
 const searchStore = useSearchStore();
 
 const items = ref([

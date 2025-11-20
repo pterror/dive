@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useWorkspaceStore, registry } from '@dive/core';
 import { FileBrowser } from '@dive/plugin-file-browser';
 import { MarkdownEditor } from '@dive/plugin-markdown';
@@ -12,6 +12,7 @@ import TagManager from './TagManager.vue';
 import PropertiesPanel from './PropertiesPanel.vue';
 
 const workspaceStore = useWorkspaceStore();
+const showInfo = ref(false);
 
 const activeView = computed(() => {
   const activeObj = workspaceStore.activeObject;

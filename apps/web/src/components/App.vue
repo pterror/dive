@@ -34,5 +34,7 @@ import MainContent from './MainContent.vue';
   flex: 1;
   position: relative;
   overflow: hidden;
+  padding: 1rem;
+  background-color: var(--color-background);
 }
 </style>
