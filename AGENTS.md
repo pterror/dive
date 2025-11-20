@@ -5,7 +5,7 @@
 - **Styling**: Vanilla CSS (BEM methodology).
 - **Desktop**: Electron (Planned wrapper for `apps/web`).
 - **Package Manager**: `pnpm` (Workspaces).
-- **Database**: SQLite (`better-sqlite3`) - Centralized, server-side (Node.js).
+- **Database**: Astro DB (LibSQL) - Native integration, server-side.
 
 ## Dive: Modular Knowledge Editor
 

@@ -35,10 +35,20 @@ We prioritize flexibility and extensibility. The core application is a shell tha
   - Search tagging should be the primary way to find things.
 
 ## Data Storage
-- **Database**: SQLite (`better-sqlite3`)
-  - *Reasoning*: Fast, reliable, single-file (easy to backup/move), supports JSON columns for flexible "Object" schema.
+- **Database**: Astro DB (LibSQL)
+  - *Reasoning*: Native Astro integration, simpler deployment, supports SQL with a type-safe ORM-like interface (`astro:db`).
   - **Architecture**: Centralized database for all objects and metadata.
-  - **Web Compatibility**: Will run on the server-side (Node.js) of Astro.
+  - **Web Compatibility**: Runs on the server-side (Node.js adapter) of Astro.
+
+## Data Model
+- **Objects Table**:
+  - `id`, `type`, `name`, `path`, `content` (JSON), `created_at`, `updated_at`.
+  - **Properties (JSON)**: A flexible column for arbitrary metadata (e.g., `author`, `episode`, `rating`).
+- **Tags**: Separate table for high-level grouping/filtering.
+- **Smart Fields Strategy**:
+  - The UI (`PropertiesPanel`) presents a unified interface for metadata.
+  - Currently stores values as simple text/numbers in the `properties` JSON.
+  - *Future*: Will support "Relations" (links to other objects) transparently within the same UI.
 
 ## UI/UX
 - **Infinite Canvas**: Custom implementation (no external heavy libs).
