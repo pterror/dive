@@ -29,6 +29,17 @@ const ObjectTags = defineTable({
 });
 
 // https://astro.build/db/config
+export const Relations = defineTable({
+  columns: {
+    id: column.text({ primaryKey: true }),
+    source_id: column.text({ references: () => Objects.columns.id }),
+    target_id: column.text({ references: () => Objects.columns.id }),
+    type: column.text(), // e.g., 'author', 'related', 'parent'
+    data: column.json({ optional: true }), // e.g., { x: 10, y: 10 } for regions
+    created_at: column.number({ default: Math.floor(Date.now() / 1000) }),
+  }
+});
+
 export default defineDb({
-  tables: { Objects, Tags, ObjectTags }
+  tables: { Objects, Tags, ObjectTags, Relations }
 });
