@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useWorkspaceStore, registry } from '@dive/core';
-import { FileBrowser } from '@dive/plugin-file-browser';
-import { MarkdownEditor } from '@dive/plugin-markdown';
-import { Canvas } from '@dive/plugin-canvas';
-import { ImageViewer } from '@dive/plugin-image';
-import { VideoPlayer } from '@dive/plugin-video';
-import { HistoryView } from '@dive/plugin-history';
-import { CalendarView } from '@dive/plugin-calendar';
-import TagManager from './TagManager.vue';
-import PropertiesPanel from './PropertiesPanel.vue';
+import { ref, computed } from "vue";
+import { useWorkspaceStore, registry } from "@dive/core";
+import { FileBrowser } from "@dive/plugin-file-browser";
+import { MarkdownEditor } from "@dive/plugin-markdown";
+import { Canvas } from "@dive/plugin-canvas";
+import { ImageViewer } from "@dive/plugin-image";
+import { VideoPlayer } from "@dive/plugin-video";
+import { HistoryView } from "@dive/plugin-history";
+import { CalendarView } from "@dive/plugin-calendar";
+import TagManager from "./TagManager.vue";
+import PropertiesPanel from "./PropertiesPanel.vue";
 
 const workspaceStore = useWorkspaceStore();
 const showInfo = ref(false);
@@ -22,17 +22,17 @@ const activeView = computed(() => {
   // For now, let's say if no active object, show file browser.
   // But we also want to be able to switch to "Canvas Mode" or "Calendar Mode".
   // Let's assume we have a "mode" in the store or we treat these as special objects.
-  
+
   // For now, let's look up the view based on the object type.
   const views = registry.getViewsForType(activeObj.type);
   if (views.length > 0) {
     return views[0].component;
   }
-  
+
   return FileBrowser; // Fallback
 });
 
-// We need to register the plugins somewhere. 
+// We need to register the plugins somewhere.
 // Since we are in a Vue component, we can't easily do it in `main.ts` of Astro.
 // But we can do it here once or in a separate setup file.
 // For now, let's manually map for the "static" tabs we want to keep available?
@@ -42,23 +42,35 @@ const activeView = computed(() => {
 // Let's keep a "Home" / "Files" tab always available, and then open tabs for files.
 
 const activeTab = computed({
-  get: () => workspaceStore.activeObject?.id || 'files',
+  get: () => workspaceStore.activeObject?.id || "files",
   set: (val) => {
-    if (val === 'files') {
+    if (val === "files") {
       workspaceStore.activeObject = null;
-    } else if (val === 'calendar') {
-       // TODO: How to represent Calendar as an object?
-       // Maybe we just set activeObject to a special "calendar" object
-       workspaceStore.activeObject = { id: 'calendar', type: 'calendar', name: 'Calendar' };
-    } else if (val === 'history') {
-       workspaceStore.activeObject = { id: 'history', type: 'history', name: 'History' };
-    } else if (val === 'canvas') {
-       workspaceStore.activeObject = { id: 'canvas', type: 'canvas', name: 'Canvas' };
+    } else if (val === "calendar") {
+      // TODO: How to represent Calendar as an object?
+      // Maybe we just set activeObject to a special "calendar" object
+      workspaceStore.activeObject = {
+        id: "calendar",
+        type: "calendar",
+        name: "Calendar",
+      };
+    } else if (val === "history") {
+      workspaceStore.activeObject = {
+        id: "history",
+        type: "history",
+        name: "History",
+      };
+    } else if (val === "canvas") {
+      workspaceStore.activeObject = {
+        id: "canvas",
+        type: "canvas",
+        name: "Canvas",
+      };
     } else {
-      const obj = workspaceStore.openObjects.find(o => o.id === val);
+      const obj = workspaceStore.openObjects.find((o) => o.id === val);
       if (obj) workspaceStore.activeObject = obj;
     }
-  }
+  },
 });
 </script>
 
@@ -66,20 +78,27 @@ const activeTab = computed({
   <main class="main-content">
     <div class="main-content__header">
       <div class="main-content__tabs">
-        <div 
-          v-for="obj in workspaceStore.openObjects" 
+        <div
+          v-for="obj in workspaceStore.openObjects"
           :key="obj.id"
           class="main-content__tab"
-          :class="{ 'main-content__tab--active': workspaceStore.activeObject?.id === obj.id }"
+          :class="{
+            'main-content__tab--active':
+              workspaceStore.activeObject?.id === obj.id,
+          }"
           @click="workspaceStore.openObject(obj)"
         >
           {{ obj.name }}
-          <span class="main-content__tab-close" @click.stop="workspaceStore.closeObject(obj.id)">×</span>
+          <span
+            class="main-content__tab-close"
+            @click.stop="workspaceStore.closeObject(obj.id)"
+            >×</span
+          >
         </div>
       </div>
       <div class="main-content__actions">
         <button @click="showInfo = !showInfo" class="btn-icon">
-          {{ showInfo ? 'Hide Info' : 'Info' }}
+          {{ showInfo ? "Hide Info" : "Info" }}
         </button>
       </div>
     </div>
@@ -87,26 +106,37 @@ const activeTab = computed({
     <div class="main-content__body">
       <div class="main-content__view">
         <div v-if="!workspaceStore.activeObject" class="main-content__empty">
-          <p>Select a file to view</p>
-        </div>
-
-        <div v-else-if="workspaceStore.activeObject.type === 'folder'" class="main-content__folder">
           <FileBrowser />
         </div>
 
-        <div v-else-if="workspaceStore.activeObject.type === 'canvas'" class="main-content__canvas">
+        <div
+          v-else-if="workspaceStore.activeObject.type === 'folder'"
+          class="main-content__folder"
+        >
+          <FileBrowser />
+        </div>
+
+        <div
+          v-else-if="workspaceStore.activeObject.type === 'canvas'"
+          class="main-content__canvas"
+        >
           <Canvas :object-id="workspaceStore.activeObject.id" />
         </div>
 
         <div v-else class="main-content__preview">
           <div class="preview-placeholder">
             <h3>{{ workspaceStore.activeObject.name }}</h3>
-            <p>No preview available for {{ workspaceStore.activeObject.type }}</p>
+            <p>
+              No preview available for {{ workspaceStore.activeObject.type }}
+            </p>
           </div>
         </div>
       </div>
 
-      <aside v-if="showInfo && workspaceStore.activeObject" class="main-content__info">
+      <aside
+        v-if="showInfo && workspaceStore.activeObject"
+        class="main-content__info"
+      >
         <div class="info-panel">
           <div class="info-panel__header">
             <h3>Details</h3>
@@ -195,7 +225,8 @@ const activeTab = computed({
   width: 300px;
   background-color: var(--color-surface);
   /* Border removed, using shadow/bg for separation */
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border-radius: 0.5rem;
   overflow-y: auto;
   margin: 1rem 1rem 1rem 0;
@@ -221,11 +252,8 @@ const activeTab = computed({
 }
 
 .main-content__empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 100%;
-  color: var(--color-text-muted);
+  /* Removed centering to allow FileBrowser to fill space */
 }
 
 .main-content__folder,
