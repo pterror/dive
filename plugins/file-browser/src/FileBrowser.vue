@@ -6,70 +6,98 @@ import { useSearchStore, useWorkspaceStore } from "@dive/core";
 
 const searchStore = useSearchStore();
 const workspaceStore = useWorkspaceStore();
-const files = ref<readonly FileObject[]>([]);
-const currentFolderId = ref<string | null>(null);
-const currentPathName = ref("Root"); // Simple display name for now
 
-// Breadcrumb stack: { id: string | null, name: string }[]
-const breadcrumbs = ref<{ id: string | null; name: string }[]>([
-  { id: null, name: "Root" },
-]);
+// State
+const recentFiles = ref<readonly FileObject[]>([]);
+const untaggedFiles = ref<readonly FileObject[]>([]);
+const taggedFiles = ref<readonly FileObject[]>([]);
 
-const filteredFiles = computed(() => {
-  if (!searchStore.query) return files.value;
-  const q = searchStore.query.toLowerCase();
-  return files.value.filter((f) => f.name.toLowerCase().includes(q));
+const isHomeView = computed(
+  () => !searchStore.selectedTag && !searchStore.query,
+);
+
+// Combined list for search filtering
+const allFiles = computed(() => {
+  if (searchStore.selectedTag) return taggedFiles.value;
+  // If searching, we might want to search EVERYTHING.
+  // But currently our API doesn't support global search easily without fetching all.
+  // For now, if query exists, we might need to fetch all?
+  // Or just search within what we have?
+  // Let's assume global search is handled by the search bar component separately or we fetch all.
+  // For this iteration, let's just show what we have.
+  return [...recentFiles.value, ...untaggedFiles.value];
 });
 
-async function fetchFiles() {
+const filteredFiles = computed(() => {
+  if (searchStore.query) {
+    const q = searchStore.query.toLowerCase();
+    // If searching, we probably want to search across everything we've loaded,
+    // or trigger a search API call.
+    // Let's just filter the current view for now.
+    return allFiles.value.filter((f) => f.name.toLowerCase().includes(q));
+  }
+  return allFiles.value;
+});
+
+async function fetchHomeData() {
   try {
-    let url = "/api/objects";
-    const params = new URLSearchParams();
-
-    if (searchStore.selectedTag) {
-      params.append("tag", searchStore.selectedTag);
-    } else if (currentFolderId.value) {
-      params.append("parent_id", currentFolderId.value);
-    }
-    // If neither, it fetches root (handled by API)
-
-    const queryString = params.toString();
-    if (queryString) {
-      url += `?${queryString}`;
+    // Fetch Recent
+    const recentRes = await fetch("/api/objects?sort=recent&limit=10");
+    if (recentRes.ok) {
+      const data = await recentRes.json();
+      recentFiles.value = mapFiles(data);
     }
 
-    const res = await fetch(url);
-    if (res.ok) {
-      const data = await res.json();
-      // Map DB objects to FileObjects
-      files.value = data.map((obj: any) => ({
-        id: obj.id,
-        name: obj.name,
-        path: obj.path || "", // Fallback
-        isDirectory: obj.type === "folder",
-        updatedAt: obj.updated_at * 1000,
-      }));
+    // Fetch Untagged
+    const untaggedRes = await fetch("/api/objects?untagged=true");
+    if (untaggedRes.ok) {
+      const data = await untaggedRes.json();
+      untaggedFiles.value = mapFiles(data);
     }
   } catch (e) {
-    console.error("Failed to fetch files:", e);
+    console.error("Failed to fetch home data:", e);
+  }
+}
+
+async function fetchTaggedData(tag: string) {
+  try {
+    const res = await fetch(`/api/objects?tag=${tag}`);
+    if (res.ok) {
+      const data = await res.json();
+      taggedFiles.value = mapFiles(data);
+    }
+  } catch (e) {
+    console.error("Failed to fetch tagged data:", e);
+  }
+}
+
+function mapFiles(data: any[]): FileObject[] {
+  return data.map((obj: any) => ({
+    id: obj.id,
+    name: obj.name,
+    path: obj.content?.path || "", // Read from content.path for external, or empty for internal
+    isDirectory: false, // No folders anymore
+    updatedAt: obj.updated_at * 1000,
+  }));
+}
+
+async function refresh() {
+  if (searchStore.selectedTag) {
+    await fetchTaggedData(searchStore.selectedTag);
+  } else {
+    await fetchHomeData();
   }
 }
 
 watch(
   () => searchStore.selectedTag,
   () => {
-    // Reset to root when tag changes? Or just filter?
-    // If tag is selected, we ignore folder hierarchy and show flat list
-    fetchFiles();
+    refresh();
   },
 );
 
-watch(currentFolderId, () => {
-  fetchFiles();
-});
-
 onMounted(() => {
-  fetchFiles();
+  refresh();
 });
 
 function getFileType(filename: string): string {
@@ -82,74 +110,81 @@ function getFileType(filename: string): string {
 }
 
 function navigate(file: FileObject) {
-  if (file.isDirectory) {
-    currentFolderId.value = file.id;
-    breadcrumbs.value.push({ id: file.id, name: file.name });
-  } else {
-    console.log("Opening file", file.path);
-    workspaceStore.openObject({
-      id: file.id,
-      type: getFileType(file.name), // Or use file.type from DB if we mapped it
-      name: file.name,
-      path: file.path,
-    });
-  }
-}
-
-function navigateUp() {
-  if (breadcrumbs.value.length > 1) {
-    breadcrumbs.value.pop(); // Remove current
-    const parent = breadcrumbs.value[breadcrumbs.value.length - 1];
-    currentFolderId.value = parent.id;
-  }
-}
-
-function navigateToBreadcrumb(index: number) {
-  // Slice breadcrumbs to index + 1
-  breadcrumbs.value = breadcrumbs.value.slice(0, index + 1);
-  const target = breadcrumbs.value[breadcrumbs.value.length - 1];
-  currentFolderId.value = target.id;
+  console.log("Opening file", file.name);
+  workspaceStore.openObject({
+    id: file.id,
+    type: getFileType(file.name),
+    name: file.name,
+    path: file.path,
+  });
 }
 </script>
 
 <template>
   <div class="file-browser">
     <div class="file-browser__header">
-      <div class="file-browser__breadcrumbs">
-        <span
-          v-for="(crumb, index) in breadcrumbs"
-          :key="crumb.id || 'root'"
-          class="breadcrumb-item"
-          :class="{
-            'breadcrumb-item--active': index === breadcrumbs.length - 1,
-          }"
-          @click="navigateToBreadcrumb(index)"
-        >
-          {{ crumb.name }}
-          <span
-            v-if="index < breadcrumbs.length - 1"
-            class="breadcrumb-separator"
-            >/</span
-          >
-        </span>
+      <div class="file-browser__title">
+        {{
+          searchStore.selectedTag ? `Tag: ${searchStore.selectedTag}` : "Home"
+        }}
       </div>
       <div class="file-browser__actions">
         <Button variant="secondary">Upload</Button>
-        <Button>New Folder</Button>
+        <Button>New Item</Button>
       </div>
     </div>
 
-    <div class="file-browser__grid">
-      <div
-        v-for="file in filteredFiles"
-        :key="file.id"
-        class="file-card"
-        @click="navigate(file)"
-      >
-        <div class="file-card__icon">
-          {{ file.isDirectory ? "📁" : "📄" }}
+    <div class="file-browser__content">
+      <!-- Home View -->
+      <div v-if="isHomeView" class="file-browser__sections">
+        <section class="file-browser__section">
+          <h3 class="section-title">Recent</h3>
+          <div class="file-browser__grid">
+            <div
+              v-for="file in recentFiles"
+              :key="file.id"
+              class="file-card"
+              @click="navigate(file)"
+            >
+              <div class="file-card__icon">
+                {{ "📄" }}
+              </div>
+              <div class="file-card__name">{{ file.name }}</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="file-browser__section">
+          <h3 class="section-title">Untagged</h3>
+          <div class="file-browser__grid">
+            <div
+              v-for="file in untaggedFiles"
+              :key="file.id"
+              class="file-card"
+              @click="navigate(file)"
+            >
+              <div class="file-card__icon">
+                {{ "❓" }}
+              </div>
+              <div class="file-card__name">{{ file.name }}</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Tagged View -->
+      <div v-else class="file-browser__grid">
+        <div
+          v-for="file in filteredFiles"
+          :key="file.id"
+          class="file-card"
+          @click="navigate(file)"
+        >
+          <div class="file-card__icon">
+            {{ "🏷️" }}
+          </div>
+          <div class="file-card__name">{{ file.name }}</div>
         </div>
-        <div class="file-card__name">{{ file.name }}</div>
       </div>
     </div>
   </div>
@@ -161,6 +196,7 @@ function navigateToBreadcrumb(index: number) {
   display: flex;
   flex-direction: column;
   padding: 1rem;
+  overflow: hidden; /* Contain scroll */
 }
 
 .file-browser__header {
@@ -170,37 +206,13 @@ function navigateToBreadcrumb(index: number) {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
 }
 
-.file-browser__breadcrumbs {
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-  color: var(--color-text);
-}
-
-.breadcrumb-item {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.breadcrumb-item:hover {
-  text-decoration: underline;
-}
-
-.breadcrumb-item--active {
+.file-browser__title {
+  font-size: 1.1rem;
   font-weight: 600;
-  cursor: default;
-}
-
-.breadcrumb-item--active:hover {
-  text-decoration: none;
-}
-
-.breadcrumb-separator {
-  margin: 0 0.5rem;
-  color: var(--color-text-muted);
+  color: var(--color-text);
 }
 
 .file-browser__actions {
@@ -208,11 +220,29 @@ function navigateToBreadcrumb(index: number) {
   gap: 0.5rem;
 }
 
+.file-browser__content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.file-browser__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
 .file-browser__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 1rem;
-  overflow-y: auto;
 }
 
 .file-card {

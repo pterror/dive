@@ -5,11 +5,6 @@ const Objects = defineTable({
     id: column.text({ primaryKey: true }),
     type: column.text(),
     name: column.text(),
-    parent_id: column.text({
-      optional: true,
-      references: () => Objects.columns.id,
-    }),
-    path: column.text({ optional: true }),
     content: column.json({ optional: true }),
     properties: column.json({ optional: true }),
     created_at: column.number({ default: Math.floor(Date.now() / 1000) }),
