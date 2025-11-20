@@ -1,7 +1,6 @@
 import type { APIRoute } from "astro";
 import { searchRegistry } from "../../lib/search/registry";
 import { DatabaseProvider } from "../../lib/search/providers/database";
-import { MockEphemeralProvider } from "../../lib/search/providers/mock_ephemeral";
 import { FileSystemProvider } from "../../lib/search/providers/filesystem";
 
 export const prerender = false;
@@ -10,7 +9,6 @@ export const prerender = false;
 // Since this is a serverless function context potentially, we register here to be safe)
 // In a real app, might want a singleton init.
 searchRegistry.register(new DatabaseProvider());
-searchRegistry.register(new MockEphemeralProvider());
 searchRegistry.register(new FileSystemProvider());
 
 export const GET: APIRoute = async ({ request }) => {
@@ -23,12 +21,12 @@ export const GET: APIRoute = async ({ request }) => {
   let filters: any = {};
   if (filtersParam) {
     try {
-      const parsedFilters = JSON.parse(filtersParam);
+      const parsedFilters: readonly any[] = JSON.parse(filtersParam);
       // Convert UI filter format to internal SearchFilters
       // Assuming UI sends array of { type: 'tag', value: '...' }
       const tags = parsedFilters
-        .filter((f: any) => f.type === "tag")
-        .map((f: any) => f.value);
+        .filter((f) => f.type === "tag")
+        .map((f) => f.value);
 
       if (tags.length > 0) {
         filters.tags = tags;
