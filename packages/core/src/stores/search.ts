@@ -3,13 +3,24 @@ import { ref } from 'vue';
 
 export const useSearchStore = defineStore('search', () => {
   const query = ref<string>('');
+  const selectedTag = ref<string | null>(null);
 
-  function setQuery(newQuery: string) {
-    query.value = newQuery;
+  function setQuery(q: string) {
+    query.value = q;
+  }
+
+  function toggleTag(tagId: string) {
+    if (selectedTag.value === tagId) {
+      selectedTag.value = null;
+    } else {
+      selectedTag.value = tagId;
+    }
   }
 
   return {
     query,
-    setQuery
+    selectedTag,
+    setQuery,
+    toggleTag
   };
 });

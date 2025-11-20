@@ -5,12 +5,13 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
+    "build": "ASTRO_DATABASE_FILE=dive.db astro build",
+    "preview": "ASTRO_DATABASE_FILE=dive.db astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/db": "^0.18.2",
+    "@astrojs/node": "^9.5.1",
     "@dive/canvas-vue": "workspace:*",
     "@dive/core": "workspace:*",
     "@dive/plugin-calendar": "workspace:*",
@@ -22,6 +23,7 @@
     "@dive/plugin-video": "workspace:*",
     "@dive/ui": "workspace:*",
     "astro": "^5.0.0",
+    "nanoid": "^5.1.6",
     "pinia": "^2.3.1",
     "vue": "^3.5.24"
   },

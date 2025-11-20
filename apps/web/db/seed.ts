@@ -8,5 +8,6 @@ export default async function seed() {
     { id: '3', type: 'markdown', name: 'notes.md', path: '/notes.md', content: { content: '# My Notes\n\nThis is a seeded note.' }, created_at: 1, updated_at: 1 },
     { id: '4', type: 'image', name: 'photo.jpg', path: '/photo.jpg', content: null, created_at: 1, updated_at: 1 },
     { id: '5', type: 'video', name: 'video.mp4', path: '/video.mp4', content: null, created_at: 1, updated_at: 1 },
+    { id: '6', type: 'canvas', name: 'Brainstorm', path: '/brainstorm.canvas', content: { nodes: [], edges: [] }, created_at: 1, updated_at: 1 },
   ]);
 }

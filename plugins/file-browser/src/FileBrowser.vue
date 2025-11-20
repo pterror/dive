@@ -17,7 +17,12 @@ const filteredFiles = computed(() => {
 
 async function fetchFiles() {
   try {
-    const res = await fetch('/api/objects');
+    let url = '/api/objects';
+    if (searchStore.selectedTag) {
+      url += `?tag=${searchStore.selectedTag}`;
+    }
+    
+    const res = await fetch(url);
     if (res.ok) {
       const data = await res.json();
       // Map DB objects to FileObjects
@@ -33,6 +38,10 @@ async function fetchFiles() {
     console.error('Failed to fetch files:', e);
   }
 }
+
+watch(() => searchStore.selectedTag, () => {
+  fetchFiles();
+});
 
 onMounted(() => {
   fetchFiles();

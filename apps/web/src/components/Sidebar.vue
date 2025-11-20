@@ -26,55 +26,64 @@ const items = ref([
     </div>
 
     <nav class="sidebar__nav">
-      <a
-        v-for="item in items"
-        :key="item.name"
-        href="#"
-        class="sidebar__item"
-      >
-        <span>{{ item.name }}</span>
-      </a>
-    </nav>
-
-    <div class="sidebar__section">
-      <h2 class="sidebar__section-title">Tags</h2>
-      <div class="sidebar__tags">
-        <div
-          v-for="tag in tagStore.tags"
-          :key="tag.id"
-          class="sidebar__tag"
-        >
-          <span class="sidebar__tag-dot" :style="{ backgroundColor: tag.color }"></span>
-          {{ tag.name }}
-        </div>
+      <div class="sidebar__section">
+        <h3 class="sidebar__section-title">Tags</h3>
+        <ul class="sidebar__list">
+          <li 
+            v-for="tag in tags" 
+            :key="tag.id" 
+            class="sidebar__item"
+            :class="{ 'sidebar__item--active': searchStore.selectedTag === tag.id }"
+            @click="searchStore.toggleTag(tag.id)"
+          >
+            <span 
+              class="sidebar__tag-color" 
+              :style="{ backgroundColor: tag.color }"
+            ></span>
+            {{ tag.name }}
+          </li>
+          <li v-if="tags.length === 0" class="sidebar__item sidebar__item--empty">
+            No tags
+          </li>
+        </ul>
       </div>
-    </div>
+    </nav>
   </div>
 </template>
 
 <style scoped>
 .sidebar {
+  width: 250px;
+  height: 100%;
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__header {
   padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .sidebar__title {
   font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
 }
 
 .sidebar__search {
-  margin-bottom: 1rem;
+  padding: 1rem;
 }
 
 .sidebar__search-input {
   width: 100%;
   padding: 0.5rem;
-  border-radius: 0.375rem;
   border: 1px solid var(--color-border);
-  background-color: var(--color-bg);
+  border-radius: 0.375rem;
+  background-color: var(--color-background);
   color: var(--color-text);
-  font-size: 0.875rem;
 }
 
 .sidebar__search-input:focus {
@@ -83,7 +92,6 @@ const items = ref([
 }
 
 .sidebar__nav {
-  display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
@@ -101,7 +109,16 @@ const items = ref([
 }
 
 .sidebar__item:hover {
-  background-color: var(--color-sidebar-hover);
+  background-color: var(--color-surface-hover);
+}
+
+.sidebar__item--active {
+  background-color: var(--color-surface-hover);
+  font-weight: 600;
+}
+
+.sidebar__item--empty {
+  margin-top: 2rem;
 }
 
 .sidebar__section {

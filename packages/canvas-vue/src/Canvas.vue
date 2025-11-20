@@ -1,18 +1,59 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, watch } from 'vue';
 import { InfiniteCanvas, type Node } from '@dive/canvas';
+
+const props = defineProps<{
+  objectId?: string;
+}>();
 
 const canvas = reactive(new InfiniteCanvas());
 const container = ref<HTMLElement | null>(null);
 const isDragging = ref(false);
 const lastMousePos = ref({ x: 0, y: 0 });
 const draggingNodeId = ref<string | null>(null);
+const isSaving = ref(false);
 
-// Mock initial data
-onMounted(() => {
-  canvas.addNode({ id: '1', x: 100, y: 100, width: 200, height: 150, type: 'note', data: { title: 'Welcome', content: 'This is a note on the canvas.' } });
-  canvas.addNode({ id: '2', x: 400, y: 200, width: 200, height: 150, type: 'image', data: { title: 'Image', src: 'placeholder.jpg' } });
+// Load initial data
+onMounted(async () => {
+  if (props.objectId) {
+    try {
+      const res = await fetch(`/api/objects/${props.objectId}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.content && data.content.nodes) {
+          data.content.nodes.forEach((n: Node) => canvas.addNode(n));
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load canvas:', e);
+    }
+  } else {
+    // Mock initial data if no ID
+    canvas.addNode({ id: '1', x: 100, y: 100, width: 200, height: 150, type: 'note', data: { title: 'Welcome', content: 'This is a note on the canvas.' } });
+    canvas.addNode({ id: '2', x: 400, y: 200, width: 200, height: 150, type: 'image', data: { title: 'Image', src: 'placeholder.jpg' } });
+  }
 });
+
+async function saveCanvas() {
+  if (!props.objectId) return;
+  isSaving.value = true;
+  try {
+    const content = {
+      nodes: canvas.nodes,
+      edges: [] // TODO: Add edges
+    };
+    
+    await fetch(`/api/objects/${props.objectId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content })
+    });
+  } catch (e) {
+    console.error('Failed to save:', e);
+  } finally {
+    isSaving.value = false;
+  }
+}
 
 function onMouseDown(e: MouseEvent) {
   if ((e.target as HTMLElement).closest('.canvas-node')) return;
@@ -97,6 +138,10 @@ function startDragNode(e: MouseEvent, nodeId: string) {
     </div>
     
     <div class="canvas-controls">
+      <button v-if="objectId" @click="saveCanvas" :disabled="isSaving">
+        {{ isSaving ? 'Saving...' : 'Save' }}
+      </button>
+      <div class="canvas-controls__divider"></div>
       <button @click="canvas.setZoom(canvas.zoom * 1.1)">+</button>
       <button @click="canvas.setZoom(1)">Reset</button>
       <button @click="canvas.setZoom(canvas.zoom * 0.9)">-</button>

@@ -60,106 +60,186 @@ const activeTab = computed({
 </script>
 
 <template>
-  <div class="main-content">
-    <div class="tabs">
-      <button 
-        class="tabs__tab" 
-        :class="{ 'tabs__tab--active': activeTab === 'files' }"
-        @click="activeTab = 'files'"
-      >Files</button>
-      
-      <button 
-        v-for="obj in workspaceStore.openObjects"
-        :key="obj.id"
-        class="tabs__tab"
-        :class="{ 'tabs__tab--active': activeTab === obj.id }"
-        @click="activeTab = obj.id"
-      >
-        {{ obj.name }}
-        <span 
-          class="tabs__close" 
-          @click.stop="workspaceStore.closeObject(obj.id)"
-        >&times;</span>
-      </button>
-
-      <!-- Permanent Tools -->
-      <button 
-        class="tabs__tab" 
-        :class="{ 'tabs__tab--active': activeTab === 'canvas' }"
-        @click="activeTab = 'canvas'"
-      >Canvas</button>
-      <button 
-        class="tabs__tab" 
-        :class="{ 'tabs__tab--active': activeTab === 'calendar' }"
-        @click="activeTab = 'calendar'"
-      >Calendar</button>
-      <button 
-        class="tabs__tab" 
-        :class="{ 'tabs__tab--active': activeTab === 'history' }"
-        @click="activeTab = 'history'"
-      >History</button>
+  <main class="main-content">
+    <div class="main-content__header">
+      <div class="main-content__tabs">
+        <div 
+          v-for="obj in workspaceStore.openObjects" 
+          :key="obj.id"
+          class="main-content__tab"
+          :class="{ 'main-content__tab--active': workspaceStore.activeObject?.id === obj.id }"
+          @click="workspaceStore.openObject(obj)"
+        >
+          {{ obj.name }}
+          <span class="main-content__tab-close" @click.stop="workspaceStore.closeObject(obj.id)">×</span>
+        </div>
+      </div>
+      <div class="main-content__actions">
+        <button @click="showInfo = !showInfo" class="main-content__action-btn">
+          {{ showInfo ? 'Hide Info' : 'Info' }}
+        </button>
+      </div>
     </div>
 
-    <div class="content-area">
-      <component :is="activeView" />
+    <div class="main-content__body">
+      <div class="main-content__view">
+        <div v-if="!workspaceStore.activeObject" class="main-content__empty">
+          <p>Select a file to view</p>
+        </div>
+
+        <div v-else-if="workspaceStore.activeObject.type === 'folder'" class="main-content__folder">
+          <FileBrowser />
+        </div>
+
+        <div v-else-if="workspaceStore.activeObject.type === 'canvas'" class="main-content__canvas">
+          <Canvas :object-id="workspaceStore.activeObject.id" />
+        </div>
+
+        <div v-else class="main-content__preview">
+          <div class="preview-placeholder">
+            <h3>{{ workspaceStore.activeObject.name }}</h3>
+            <p>No preview available for {{ workspaceStore.activeObject.type }}</p>
+          </div>
+        </div>
+      </div>
+
+      <aside v-if="showInfo && workspaceStore.activeObject" class="main-content__info">
+        <div class="info-panel">
+          <div class="info-panel__header">
+            <h3>Details</h3>
+          </div>
+          <div class="info-panel__content">
+            <p><strong>Name:</strong> {{ workspaceStore.activeObject.name }}</p>
+            <p><strong>Type:</strong> {{ workspaceStore.activeObject.type }}</p>
+            <p><strong>Path:</strong> {{ workspaceStore.activeObject.path }}</p>
+          </div>
+          <TagManager :object-id="workspaceStore.activeObject.id" />
+        </div>
+      </aside>
     </div>
-  </div>
+  </main>
 </template>
 
 <style scoped>
 .main-content {
-  height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  background-color: var(--color-background);
+  overflow: hidden;
 }
 
-.tabs {
+.main-content__header {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
-  background-color: var(--color-bg);
+  padding-right: 1rem;
+}
+
+.main-content__tabs {
+  display: flex;
   overflow-x: auto;
 }
 
-.tabs__tab {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  background: transparent;
+.main-content__tab {
+  padding: 0.75rem 1rem;
   cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text);
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-  white-space: nowrap;
+  border-right: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 0.875rem;
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
 }
 
-.tabs__tab:hover {
-  background-color: var(--color-sidebar-hover);
+.main-content__tab:hover {
+  background-color: var(--color-surface-hover);
 }
 
-.tabs__tab--active {
+.main-content__tab--active {
+  background-color: var(--color-background);
   color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
+  font-weight: 500;
+  border-bottom: 2px solid var(--color-primary);
 }
 
-.tabs__close {
+.main-content__tab-close {
+  font-size: 1.25rem;
+  line-height: 0.5;
   opacity: 0.5;
-  font-size: 1.1em;
-  line-height: 1;
 }
 
-.tabs__close:hover {
+.main-content__tab-close:hover {
   opacity: 1;
-  color: var(--color-danger, #ef4444);
 }
 
-.content-area {
+.main-content__body {
   flex: 1;
+  display: flex;
   overflow: hidden;
+}
+
+.main-content__view {
+  flex: 1;
+  overflow: auto;
   position: relative;
 }
-</style>
 
+.main-content__info {
+  width: 300px;
+  background-color: var(--color-surface);
+  border-left: 1px solid var(--color-border);
+  overflow-y: auto;
+}
+
+.info-panel__header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.info-panel__header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.info-panel__content {
+  padding: 1rem;
+}
+
+.info-panel__content p {
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+.main-content__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-muted);
+}
+
+.main-content__folder,
+.main-content__canvas,
+.main-content__preview {
+  height: 100%;
+}
+
+.preview-placeholder {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.main-content__action-btn {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+</style>
