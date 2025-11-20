@@ -2,10 +2,15 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useTagStore, useSearchStore } from "@dive/core";
+import { onMounted } from "vue";
 
 const tagStore = useTagStore();
 const { tags } = storeToRefs(tagStore);
 const searchStore = useSearchStore();
+
+onMounted(() => {
+  tagStore.fetchTags();
+});
 
 function toggleTag(tag: { id: string; name: string }) {
   searchStore.toggleFilter({
@@ -152,7 +157,12 @@ function isTagSelected(tagId: string) {
   background-color: var(--color-sidebar-hover);
 }
 
-.sidebar__tag-dot {
+.sidebar__tag--active {
+  background-color: var(--color-sidebar-hover);
+  font-weight: 600;
+}
+
+.sidebar__tag-color {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;

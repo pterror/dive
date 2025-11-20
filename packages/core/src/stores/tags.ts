@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
 export interface Tag {
   readonly id: string;
@@ -7,23 +7,40 @@ export interface Tag {
   readonly color?: string;
 }
 
-export const useTagStore = defineStore('tags', () => {
-  const tags = ref<Tag[]>([
-    { id: '1', name: 'work', color: '#ef4444' },
-    { id: '2', name: 'personal', color: '#3b82f6' },
-    { id: '3', name: 'ideas', color: '#10b981' },
-  ]);
+export const useTagStore = defineStore("tags", () => {
+  const tags = ref<Tag[]>([]);
 
-  function addTag(name: string) {
-    tags.value.push({
-      id: Date.now().toString(),
-      name,
-      color: '#9ca3af'
-    });
+  async function fetchTags() {
+    try {
+      const res = await fetch("/api/tags");
+      if (res.ok) {
+        tags.value = await res.json();
+      }
+    } catch (e) {
+      console.error("Failed to fetch tags:", e);
+    }
+  }
+
+  async function addTag(name: string, color?: string) {
+    try {
+      const res = await fetch("/api/tags", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, color }),
+      });
+
+      if (res.ok) {
+        const newTag = await res.json();
+        tags.value.push(newTag);
+      }
+    } catch (e) {
+      console.error("Failed to add tag:", e);
+    }
   }
 
   return {
     tags,
-    addTag
+    fetchTags,
+    addTag,
   };
 });
