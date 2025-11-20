@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Sidebar from './Sidebar.vue';
-import MainContent from './MainContent.vue';
+import Sidebar from "./Sidebar.vue";
+import MainContent from "./MainContent.vue";
 </script>
 
 <template>
@@ -31,6 +31,7 @@ import MainContent from './MainContent.vue';
 }
 
 .app__main {
+  display: flex;
   flex: 1;
   position: relative;
   overflow: hidden;

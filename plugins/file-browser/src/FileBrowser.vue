@@ -70,6 +70,7 @@ function mapFiles(data: any[]): FileObject[] {
     id: obj.id,
     name: obj.name,
     path: obj.content?.path || "", // Read from content.path for external, or empty for internal
+    type: obj.type,
     isDirectory: false, // No folders anymore
     updatedAt: obj.updated_at * 1000,
   }));
@@ -108,7 +109,7 @@ function navigate(file: FileObject) {
   console.log("Opening file", file.name);
   workspaceStore.openObject({
     id: file.id,
-    type: getFileType(file.name),
+    type: file.type || getFileType(file.name),
     name: file.name,
     path: file.path,
   });
