@@ -17,8 +17,12 @@ export const GET: APIRoute = async ({ request }) => {
   const limit = Number(url.searchParams.get("limit")) || 0;
   const sort = url.searchParams.get("sort"); // 'recent'
   const queryParam = url.searchParams.get("q") || "";
+  const untagged = url.searchParams.get("untagged") === "true";
 
   let filters: any = {};
+  if (untagged) {
+    filters.untagged = true;
+  }
   if (filtersParam) {
     try {
       const parsedFilters: readonly any[] = JSON.parse(filtersParam);

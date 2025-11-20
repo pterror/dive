@@ -14,6 +14,7 @@ export interface SearchResult {
 export interface SearchFilters {
   type?: string;
   tags?: string[];
+  untagged?: boolean;
   // Add more as needed
 }
 

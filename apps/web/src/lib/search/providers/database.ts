@@ -1,4 +1,13 @@
-import { db, Objects, ObjectTags, like, and, inArray, sql } from "astro:db";
+import {
+  db,
+  Objects,
+  ObjectTags,
+  like,
+  and,
+  inArray,
+  notInArray,
+  sql,
+} from "astro:db";
 import type { SearchProvider, SearchResult, SearchFilters } from "../types";
 
 export class DatabaseProvider implements SearchProvider {
@@ -38,6 +47,15 @@ export class DatabaseProvider implements SearchProvider {
       )`;
 
       conditions.push(inArray(Objects.id, subquery));
+    }
+
+    // Untagged Filter
+    if (filters?.untagged) {
+      // Find objects that are NOT in the ObjectTags table
+      const taggedSubquery = db
+        .select({ id: ObjectTags.object_id })
+        .from(ObjectTags);
+      conditions.push(notInArray(Objects.id, taggedSubquery));
     }
 
     let queryBuilder = db
