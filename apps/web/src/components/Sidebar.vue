@@ -1,58 +1,60 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useTagStore, useSearchStore } from '@dive/core';
+import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useTagStore, useSearchStore } from "@dive/core";
 
 const tagStore = useTagStore();
 const { tags } = storeToRefs(tagStore);
 const searchStore = useSearchStore();
 
-const items = ref([
-  { name: 'Files', icon: 'folder' },
-  { name: 'Notes', icon: 'edit' },
-  { name: 'Canvas', icon: 'map' },
-]);
+function toggleTag(tag: { id: string; name: string }) {
+  searchStore.toggleFilter({
+    id: tag.id,
+    type: "tag",
+    value: tag.id,
+    label: tag.name,
+  });
+}
+
+function isTagSelected(tagId: string) {
+  return searchStore.filters.some((f) => f.type === "tag" && f.id === tagId);
+}
 </script>
 
 <template>
-  <div class="sidebar">
+  <aside class="sidebar">
     <div class="sidebar__header">
-      <h1 class="sidebar__title">Dive</h1>
+      <div class="sidebar__title">Dive</div>
     </div>
-    
+
     <div class="sidebar__search">
-      <input 
-        type="text" 
-        v-model="searchStore.query" 
-        placeholder="Search..." 
-        class="input"
+      <input
+        type="text"
+        class="input sidebar__search-input"
+        placeholder="Search..."
+        v-model="searchStore.query"
       />
     </div>
 
-    <nav class="sidebar__nav">
-      <div class="sidebar__section">
-        <h3 class="sidebar__section-title">Tags</h3>
-        <ul class="sidebar__list">
-          <li 
-            v-for="tag in tags" 
-            :key="tag.id" 
-            class="sidebar__item"
-            :class="{ 'sidebar__item--active': searchStore.selectedTag === tag.id }"
-            @click="searchStore.toggleTag(tag.id)"
-          >
-            <span 
-              class="sidebar__tag-color" 
-              :style="{ backgroundColor: tag.color }"
-            ></span>
-            {{ tag.name }}
-          </li>
-          <li v-if="tags.length === 0" class="sidebar__item sidebar__item--empty">
-            No tags
-          </li>
-        </ul>
+    <div class="sidebar__section">
+      <div class="sidebar__section-title">Tags</div>
+      <div class="sidebar__tags">
+        <div
+          v-for="tag in tags"
+          :key="tag.id"
+          class="sidebar__tag"
+          :class="{ 'sidebar__tag--active': isTagSelected(tag.id) }"
+          @click="toggleTag(tag)"
+        >
+          <span
+            class="sidebar__tag-color"
+            :style="{ backgroundColor: tag.color }"
+          ></span>
+          <span class="sidebar__tag-name">{{ tag.name }}</span>
+        </div>
       </div>
-    </nav>
-  </div>
+    </div>
+  </aside>
 </template>
 
 <style scoped>

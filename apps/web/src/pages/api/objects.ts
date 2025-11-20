@@ -5,15 +5,19 @@ export const prerender = false;
 
 export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url);
-  const tagId = url.searchParams.get("tag");
+  const filtersParam = url.searchParams.get("filters");
   const untagged = url.searchParams.get("untagged") === "true";
   const limit = Number(url.searchParams.get("limit")) || 0;
   const sort = url.searchParams.get("sort"); // 'recent'
+  const queryParam = url.searchParams.get("q");
 
   let objects;
 
-  if (tagId) {
-    objects = await db
+  if (filtersParam) {
+    const filters = JSON.parse(filtersParam);
+
+    // Start with base query
+    let query = db
       .select({
         id: Objects.id,
         type: Objects.type,
@@ -23,9 +27,67 @@ export const GET: APIRoute = async ({ request }) => {
         created_at: Objects.created_at,
         updated_at: Objects.updated_at,
       })
-      .from(Objects)
-      .innerJoin(ObjectTags, eq(Objects.id, ObjectTags.object_id))
-      .where(eq(ObjectTags.tag_id, tagId));
+      .from(Objects);
+
+    // Apply filters
+    // Note: Drizzle/AstroDB query building with dynamic ANDs can be tricky.
+    // For MVP, let's fetch all and filter in memory if complex, OR chain where clauses.
+    // Chaining .where() in Drizzle usually adds AND.
+
+    // However, for Tags, we need joins.
+    // If we have multiple tags, we need to ensure the object has ALL of them.
+    // This is "Relational Division" or multiple exists checks.
+
+    // Simple approach: Fetch all objects that match ANY of the tags, then filter in JS to ensure they match ALL.
+    // OR: Just handle single tag for now and expand? User asked for multiple.
+
+    // Let's try the JS filtering approach for robustness in this iteration.
+    // Fetch all objects, then filter.
+
+    const allObjects = await db
+      .select({
+        id: Objects.id,
+        type: Objects.type,
+        name: Objects.name,
+        content: Objects.content,
+        properties: Objects.properties,
+        created_at: Objects.created_at,
+        updated_at: Objects.updated_at,
+      })
+      .from(Objects);
+
+    // Fetch all tags for these objects to allow filtering
+    const allObjectTags = await db.select().from(ObjectTags);
+    const tagMap = new Map<string, Set<string>>(); // object_id -> Set<tag_id>
+
+    for (const ot of allObjectTags) {
+      if (!tagMap.has(ot.object_id)) {
+        tagMap.set(ot.object_id, new Set());
+      }
+      tagMap.get(ot.object_id)?.add(ot.tag_id);
+    }
+
+    objects = allObjects.filter((obj) => {
+      // Check all filters
+      for (const filter of filters) {
+        if (filter.type === "tag") {
+          const objTags = tagMap.get(obj.id);
+          if (!objTags || !objTags.has(filter.value)) {
+            return false;
+          }
+        }
+        // Add other filter types here (date, type, etc.)
+      }
+
+      // Check text query if present
+      if (queryParam) {
+        if (!obj.name.toLowerCase().includes(queryParam.toLowerCase())) {
+          return false;
+        }
+      }
+
+      return true;
+    });
   } else if (untagged) {
     // Fetch objects that have NO tags
     // This requires a LEFT JOIN and checking for NULL, or a NOT EXISTS subquery.
@@ -60,21 +122,11 @@ export const GET: APIRoute = async ({ request }) => {
         properties: Objects.properties,
         created_at: Objects.created_at,
         updated_at: Objects.updated_at,
-        tag_id: ObjectTags.tag_id, // Will be null if no match
+        tag_id: ObjectTags.tag_id,
       })
       .from(Objects)
       .leftJoin(ObjectTags, eq(Objects.id, ObjectTags.object_id));
 
-    // Filter in JS where tag_id is null.
-    // Note: This returns duplicates if an object has multiple tags, but we only want those with NO tags.
-    // So if an object has ANY tag, it will appear with a tag_id.
-    // If it has NO tags, it appears once with null.
-
-    // Wait, if I left join, I get rows.
-    // Object A (Tag 1) -> Row
-    // Object B (No Tag) -> Row (tag_id null)
-
-    // So I can filter `row.tag_id === null`.
     objects = allObjects.filter((o) => o.tag_id === null);
 
     // Deduplicate is not needed if they have no tags (they appear once).
@@ -90,6 +142,12 @@ export const GET: APIRoute = async ({ request }) => {
     }
 
     objects = await query;
+
+    if (queryParam) {
+      objects = objects.filter((o: any) =>
+        o.name.toLowerCase().includes(queryParam.toLowerCase()),
+      );
+    }
   }
 
   // Apply JS sort and limit if DB didn't handle it (for simplicity in this iteration)

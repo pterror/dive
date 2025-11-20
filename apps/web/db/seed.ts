@@ -1,4 +1,4 @@
-import { db, Objects } from "astro:db";
+import { db, Objects, Tags, ObjectTags } from "astro:db";
 
 // https://astro.build/db/seed
 export default async function seed() {
@@ -42,5 +42,16 @@ export default async function seed() {
       created_at: 1,
       updated_at: 1,
     },
+  ]);
+
+  await db.insert(Tags).values([
+    { id: "tag1", name: "Documents", color: "#3b82f6" },
+    { id: "tag2", name: "Media", color: "#ef4444" },
+  ]);
+
+  await db.insert(ObjectTags).values([
+    { object_id: "1", tag_id: "tag1" }, // notes.md -> Documents
+    { object_id: "3", tag_id: "tag2" }, // photo.jpg -> Media
+    { object_id: "4", tag_id: "tag2" }, // video.mp4 -> Media
   ]);
 }

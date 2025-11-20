@@ -1,3 +1,4 @@
+```vue
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import type { FileObject } from "./types";
@@ -10,34 +11,16 @@ const workspaceStore = useWorkspaceStore();
 // State
 const recentFiles = ref<readonly FileObject[]>([]);
 const untaggedFiles = ref<readonly FileObject[]>([]);
-const taggedFiles = ref<readonly FileObject[]>([]);
+const filteredFiles = ref<readonly FileObject[]>([]);
 
 const isHomeView = computed(
-  () => !searchStore.selectedTag && !searchStore.query,
+  () => searchStore.filters.length === 0 && !searchStore.query,
 );
 
-// Combined list for search filtering
-const allFiles = computed(() => {
-  if (searchStore.selectedTag) return taggedFiles.value;
-  // If searching, we might want to search EVERYTHING.
-  // But currently our API doesn't support global search easily without fetching all.
-  // For now, if query exists, we might need to fetch all?
-  // Or just search within what we have?
-  // Let's assume global search is handled by the search bar component separately or we fetch all.
-  // For this iteration, let's just show what we have.
-  return [...recentFiles.value, ...untaggedFiles.value];
-});
-
-const filteredFiles = computed(() => {
-  if (searchStore.query) {
-    const q = searchStore.query.toLowerCase();
-    // If searching, we probably want to search across everything we've loaded,
-    // or trigger a search API call.
-    // Let's just filter the current view for now.
-    return allFiles.value.filter((f) => f.name.toLowerCase().includes(q));
-  }
-  return allFiles.value;
-});
+// Combined list for search filtering (client-side search on top of server results?)
+// Actually, if we have filters, we fetch filtered results.
+// If we have query, we might want to search globally.
+// For now, let's keep the "Home View" vs "Filtered View" distinction.
 
 async function fetchHomeData() {
   try {
@@ -59,15 +42,26 @@ async function fetchHomeData() {
   }
 }
 
-async function fetchTaggedData(tag: string) {
+async function fetchFilteredData() {
   try {
-    const res = await fetch(`/api/objects?tag=${tag}`);
+    const params = new URLSearchParams();
+
+    // Serialize filters
+    if (searchStore.filters.length > 0) {
+      params.append("filters", JSON.stringify(searchStore.filters));
+    }
+
+    if (searchStore.query) {
+      params.append("q", searchStore.query);
+    }
+
+    const res = await fetch(`/api/objects?${params.toString()}`);
     if (res.ok) {
       const data = await res.json();
-      taggedFiles.value = mapFiles(data);
+      filteredFiles.value = mapFiles(data);
     }
   } catch (e) {
-    console.error("Failed to fetch tagged data:", e);
+    console.error("Failed to fetch filtered data:", e);
   }
 }
 
@@ -82,18 +76,19 @@ function mapFiles(data: any[]): FileObject[] {
 }
 
 async function refresh() {
-  if (searchStore.selectedTag) {
-    await fetchTaggedData(searchStore.selectedTag);
-  } else {
+  if (isHomeView.value) {
     await fetchHomeData();
+  } else {
+    await fetchFilteredData();
   }
 }
 
 watch(
-  () => searchStore.selectedTag,
+  () => [searchStore.filters, searchStore.query],
   () => {
     refresh();
   },
+  { deep: true },
 );
 
 onMounted(() => {
@@ -118,15 +113,35 @@ function navigate(file: FileObject) {
     path: file.path,
   });
 }
+
+function removeFilter(id: string) {
+  searchStore.removeFilter(id);
+}
 </script>
 
 <template>
   <div class="file-browser">
     <div class="file-browser__header">
-      <div class="file-browser__title">
-        {{
-          searchStore.selectedTag ? `Tag: ${searchStore.selectedTag}` : "Home"
-        }}
+      <div class="file-browser__title-area">
+        <div v-if="isHomeView" class="file-browser__title">Home</div>
+        <div v-else class="file-browser__filters">
+          <div
+            v-for="filter in searchStore.filters"
+            :key="filter.id"
+            class="filter-chip"
+          >
+            <span class="filter-chip__label">{{ filter.label }}</span>
+            <button
+              class="filter-chip__remove"
+              @click.stop="removeFilter(filter.id)"
+            >
+              ×
+            </button>
+          </div>
+          <div v-if="searchStore.query" class="filter-chip filter-chip--query">
+            "{{ searchStore.query }}"
+          </div>
+        </div>
       </div>
       <div class="file-browser__actions">
         <Button variant="secondary">Upload</Button>
@@ -172,7 +187,7 @@ function navigate(file: FileObject) {
         </section>
       </div>
 
-      <!-- Tagged View -->
+      <!-- Filtered View -->
       <div v-else class="file-browser__grid">
         <div
           v-for="file in filteredFiles"
@@ -209,10 +224,56 @@ function navigate(file: FileObject) {
   flex-shrink: 0;
 }
 
+.file-browser__title-area {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .file-browser__title {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--color-text);
+}
+
+.file-browser__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-chip {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--color-primary-border);
+}
+
+.filter-chip--query {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.filter-chip__remove {
+  background: none;
+  border: none;
+  color: inherit;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.7;
+}
+
+.filter-chip__remove:hover {
+  opacity: 1;
 }
 
 .file-browser__actions {
