@@ -58,7 +58,8 @@ body {
 }
 
 /* Global Element Styles */
-input {
+input,
+select {
   width: 100%;
   padding: 0.5rem;
   border: none;
@@ -67,16 +68,16 @@ input {
   color: var(--color-text);
   box-sizing: border-box;
   transition: background-color 0.2s, box-shadow 0.2s;
-}
 
-input:hover {
-  background-color: var(--color-surface-hover);
-}
+  &:hover {
+    background-color: var(--color-surface-hover);
+  }
 
-input:focus {
-  outline: none;
-  background-color: var(--color-input-focus-bg);
-  box-shadow: 0 0 0 2px var(--color-primary);
+  &:focus {
+    outline: none;
+    background-color: var(--color-input-focus-bg);
+    box-shadow: 0 0 0 2px var(--color-primary);
+  }
 }
 
 button {
@@ -88,13 +89,8 @@ button {
   font-size: 0.875rem;
   color: var(--color-text);
   transition: background-color 0.2s;
-}
 
-button:hover {
-  background-color: var(--color-surface-hover);
-}
-
-/* Utility classes if needed, but prefer BEM components */
-.u-hidden {
-  display: none;
+  &:hover {
+    background-color: var(--color-surface-hover);
+  }
 }

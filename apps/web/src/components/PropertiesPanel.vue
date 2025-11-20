@@ -243,8 +243,6 @@ const availableTargets = computed(() => {
 <style scoped>
 .properties-panel {
   padding: 1rem;
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-border);
 }
 
 .properties-panel__header {
@@ -287,8 +285,6 @@ const availableTargets = computed(() => {
 }
 
 .property-item__remove {
-  background: none;
-  border: none;
   color: var(--color-text-muted);
   cursor: pointer;
   font-size: 1rem;
@@ -300,22 +296,11 @@ const availableTargets = computed(() => {
   color: var(--color-danger);
 }
 
-.property-item__input {
-  width: 100%;
-  padding: 0.375rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.25rem;
-  background: var(--color-background);
-  color: var(--color-text);
-  font-size: 0.875rem;
-}
-
 .property-item__link {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.375rem;
-  border: 1px solid var(--color-border);
   border-radius: 0.25rem;
   background: var(--color-surface-hover);
   color: var(--color-text);
@@ -343,8 +328,6 @@ const availableTargets = computed(() => {
 }
 
 .add-mode-switch button {
-  background: none;
-  border: none;
   font-size: 0.75rem;
   cursor: pointer;
   color: var(--color-text-muted);
@@ -367,7 +350,6 @@ const availableTargets = computed(() => {
 .properties-panel__select {
   flex: 1;
   padding: 0.375rem;
-  border: 1px solid var(--color-border);
   border-radius: 0.25rem;
   background: var(--color-bg);
   color: var(--color-text);
@@ -378,7 +360,6 @@ const availableTargets = computed(() => {
 .properties-panel__add-btn {
   padding: 0 0.75rem;
   background: var(--color-surface-hover);
-  border: 1px solid var(--color-border);
   border-radius: 0.25rem;
   cursor: pointer;
   color: var(--color-text);
