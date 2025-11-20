@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { searchRegistry } from "../../lib/search/registry";
 import { DatabaseProvider } from "../../lib/search/providers/database";
 import { MockEphemeralProvider } from "../../lib/search/providers/mock_ephemeral";
+import { FileSystemProvider } from "../../lib/search/providers/filesystem";
 
 export const prerender = false;
 
@@ -10,6 +11,7 @@ export const prerender = false;
 // In a real app, might want a singleton init.
 searchRegistry.register(new DatabaseProvider());
 searchRegistry.register(new MockEphemeralProvider());
+searchRegistry.register(new FileSystemProvider());
 
 export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url);

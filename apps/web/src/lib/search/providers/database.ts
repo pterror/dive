@@ -55,6 +55,7 @@ export class DatabaseProvider implements SearchProvider {
 
     return objects.map((obj) => ({
       ...obj,
+      id: `${this.id}:${obj.id}`,
       provider_id: this.id,
       icon: "database", // Placeholder icon name
     }));
