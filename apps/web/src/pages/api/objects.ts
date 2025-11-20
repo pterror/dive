@@ -16,19 +16,6 @@ export const GET: APIRoute = async ({ request }) => {
   if (filtersParam) {
     const filters = JSON.parse(filtersParam);
 
-    // Start with base query
-    let query = db
-      .select({
-        id: Objects.id,
-        type: Objects.type,
-        name: Objects.name,
-        content: Objects.content,
-        properties: Objects.properties,
-        created_at: Objects.created_at,
-        updated_at: Objects.updated_at,
-      })
-      .from(Objects);
-
     // Apply filters
     // Note: Drizzle/AstroDB query building with dynamic ANDs can be tricky.
     // For MVP, let's fetch all and filter in memory if complex, OR chain where clauses.

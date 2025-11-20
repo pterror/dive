@@ -131,7 +131,7 @@ function isTagSelected(tagId: string) {
 .sidebar__section-title {
   font-size: 0.75rem;
   text-transform: uppercase;
-  color: #6b7280;
+  color: var(--color-text-muted);
   margin-bottom: 0.5rem;
   font-weight: 600;
   padding: 0 0.75rem; /* Align with items */

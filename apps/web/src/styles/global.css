@@ -4,6 +4,7 @@
   /* Light Mode */
   --color-bg: oklch(98% 0.01 var(--hue)); /* Solid light background */
   --color-text: oklch(20% 0.02 var(--hue));
+  --color-text-muted: oklch(55% 0.05 var(--hue));
   --color-border: oklch(20% 0.02 var(--hue) / 0.1);
 
   --color-primary: oklch(60% 0.2 var(--hue));
@@ -26,6 +27,7 @@
     /* Dark Mode */
     --color-bg: oklch(15% 0.02 var(--hue)); /* Solid dark background */
     --color-text: oklch(95% 0.01 var(--hue));
+    --color-text-muted: oklch(70% 0.05 var(--hue));
     --color-border: oklch(95% 0.01 var(--hue) / 0.1);
 
     /* Light base for transparent elements in Dark Mode (Frosted Glass) */

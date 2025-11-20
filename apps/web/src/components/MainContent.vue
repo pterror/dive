@@ -47,7 +47,6 @@ const activeTab = computed({
     if (val === "files") {
       workspaceStore.activeObject = null;
     } else if (val === "calendar") {
-      // TODO: How to represent Calendar as an object?
       // Maybe we just set activeObject to a special "calendar" object
       workspaceStore.activeObject = {
         id: "calendar",
