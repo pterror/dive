@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue';
+import { ref, watch, onMounted, computed } from "vue";
 
 const props = defineProps<{
   objectId: string;
@@ -9,11 +9,11 @@ const properties = ref<Record<string, any>>({});
 const relations = ref<any[]>([]);
 const allObjects = ref<any[]>([]);
 
-const newKey = ref('');
-const newValue = ref('');
+const newKey = ref("");
+const newValue = ref("");
 const isSaving = ref(false);
-const addMode = ref<'text' | 'link'>('text');
-const selectedTargetId = ref('');
+const addMode = ref<"text" | "link">("text");
+const selectedTargetId = ref("");
 
 async function fetchProperties() {
   try {
@@ -23,7 +23,7 @@ async function fetchProperties() {
       properties.value = data.properties || {};
     }
   } catch (e) {
-    console.error('Failed to fetch properties:', e);
+    console.error("Failed to fetch properties:", e);
   }
 }
 
@@ -34,18 +34,18 @@ async function fetchRelations() {
       relations.value = await res.json();
     }
   } catch (e) {
-    console.error('Failed to fetch relations:', e);
+    console.error("Failed to fetch relations:", e);
   }
 }
 
 async function fetchAllObjects() {
   try {
-    const res = await fetch('/api/objects');
+    const res = await fetch("/api/objects");
     if (res.ok) {
       allObjects.value = await res.json();
     }
   } catch (e) {
-    console.error('Failed to fetch objects:', e);
+    console.error("Failed to fetch objects:", e);
   }
 }
 
@@ -53,12 +53,12 @@ async function saveProperties() {
   isSaving.value = true;
   try {
     await fetch(`/api/objects/${props.objectId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ properties: properties.value })
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ properties: properties.value }),
     });
   } catch (e) {
-    console.error('Failed to save properties:', e);
+    console.error("Failed to save properties:", e);
   } finally {
     isSaving.value = false;
   }
@@ -66,39 +66,39 @@ async function saveProperties() {
 
 async function addRelation() {
   if (!newKey.value || !selectedTargetId.value) return;
-  
+
   try {
-    const res = await fetch('/api/relations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const res = await fetch("/api/relations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         sourceId: props.objectId,
         targetId: selectedTargetId.value,
-        type: newKey.value
-      })
+        type: newKey.value,
+      }),
     });
-    
+
     if (res.ok) {
       await fetchRelations();
-      newKey.value = '';
-      selectedTargetId.value = '';
+      newKey.value = "";
+      selectedTargetId.value = "";
     }
   } catch (e) {
-    console.error('Failed to add relation:', e);
+    console.error("Failed to add relation:", e);
   }
 }
 
 function addProperty() {
   if (!newKey.value) return;
-  
-  if (addMode.value === 'link') {
+
+  if (addMode.value === "link") {
     addRelation();
     return;
   }
 
   properties.value[newKey.value] = newValue.value;
-  newKey.value = '';
-  newValue.value = '';
+  newKey.value = "";
+  newValue.value = "";
   saveProperties();
 }
 
@@ -109,10 +109,10 @@ function removeProperty(key: string) {
 
 async function removeRelation(id: string) {
   try {
-    await fetch(`/api/relations/${id}`, { method: 'DELETE' });
+    await fetch(`/api/relations/${id}`, { method: "DELETE" });
     await fetchRelations();
   } catch (e) {
-    console.error('Failed to remove relation:', e);
+    console.error("Failed to remove relation:", e);
   }
 }
 
@@ -121,10 +121,13 @@ function updateProperty(key: string, value: any) {
   saveProperties();
 }
 
-watch(() => props.objectId, () => {
-  fetchProperties();
-  fetchRelations();
-});
+watch(
+  () => props.objectId,
+  () => {
+    fetchProperties();
+    fetchRelations();
+  },
+);
 
 onMounted(() => {
   fetchProperties();
@@ -133,7 +136,7 @@ onMounted(() => {
 });
 
 const availableTargets = computed(() => {
-  return allObjects.value.filter(obj => obj.id !== props.objectId);
+  return allObjects.value.filter((obj) => obj.id !== props.objectId);
 });
 </script>
 
@@ -148,9 +151,11 @@ const availableTargets = computed(() => {
       <div v-for="(value, key) in properties" :key="key" class="property-item">
         <div class="property-item__header">
           <span class="property-item__key">{{ key }}</span>
-          <button class="property-item__remove" @click="removeProperty(key)">×</button>
+          <button class="property-item__remove" @click="removeProperty(key)">
+            ×
+          </button>
         </div>
-        <input 
+        <input
           class="property-item__input"
           :value="value"
           @change="(e) => updateProperty(key, (e.target as HTMLInputElement).value)"
@@ -158,14 +163,27 @@ const availableTargets = computed(() => {
       </div>
 
       <!-- Relations -->
-      <div v-for="relation in relations" :key="relation.id" class="property-item property-item--relation">
+      <div
+        v-for="relation in relations"
+        :key="relation.id"
+        class="property-item property-item--relation"
+      >
         <div class="property-item__header">
-          <span class="property-item__key property-item__key--link">{{ relation.type }}</span>
-          <button class="property-item__remove" @click="removeRelation(relation.id)">×</button>
+          <span class="property-item__key property-item__key--link">{{
+            relation.type
+          }}</span>
+          <button
+            class="property-item__remove"
+            @click="removeRelation(relation.id)"
+          >
+            ×
+          </button>
         </div>
         <div class="property-item__link">
           <span class="link-icon">🔗</span>
-          <span class="link-name">{{ relation.otherObject?.name || 'Unknown' }}</span>
+          <span class="link-name">{{
+            relation.otherObject?.name || "Unknown"
+          }}</span>
           <span class="link-type">({{ relation.otherObject?.type }})</span>
         </div>
       </div>
@@ -173,33 +191,37 @@ const availableTargets = computed(() => {
 
     <div class="properties-panel__add">
       <div class="add-mode-switch">
-        <button 
-          :class="{ active: addMode === 'text' }" 
+        <button
+          :class="{ active: addMode === 'text' }"
           @click="addMode = 'text'"
-        >Text</button>
-        <button 
-          :class="{ active: addMode === 'link' }" 
+        >
+          Text
+        </button>
+        <button
+          :class="{ active: addMode === 'link' }"
           @click="addMode = 'link'"
-        >Link</button>
+        >
+          Link
+        </button>
       </div>
 
       <div class="add-inputs">
-        <input 
-          v-model="newKey" 
-          placeholder="Key (e.g. Author)" 
+        <input
+          v-model="newKey"
+          placeholder="Key (e.g. Author)"
           class="properties-panel__input"
           @keyup.enter="addProperty"
         />
-        
-        <input 
+
+        <input
           v-if="addMode === 'text'"
-          v-model="newValue" 
-          placeholder="Value" 
+          v-model="newValue"
+          placeholder="Value"
           class="properties-panel__input"
           @keyup.enter="addProperty"
         />
-        
-        <select 
+
+        <select
           v-else
           v-model="selectedTargetId"
           class="properties-panel__select"
@@ -210,7 +232,9 @@ const availableTargets = computed(() => {
           </option>
         </select>
 
-        <button @click="addProperty" class="properties-panel__add-btn">+</button>
+        <button @click="addProperty" class="properties-panel__add-btn">
+          +
+        </button>
       </div>
     </div>
   </div>
@@ -345,7 +369,7 @@ const availableTargets = computed(() => {
   padding: 0.375rem;
   border: 1px solid var(--color-border);
   border-radius: 0.25rem;
-  background: var(--color-background);
+  background: var(--color-bg);
   color: var(--color-text);
   font-size: 0.875rem;
   min-width: 0;
