@@ -16,6 +16,9 @@
   --color-surface-hover: oklch(20% 0.02 var(--hue) / 0.1);
 
   --color-input-focus-bg: oklch(20% 0.02 var(--hue) / 0.05);
+
+  --color-success: oklch(65% 0.2 145);
+  --color-danger: oklch(60% 0.2 25);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -54,8 +57,8 @@ body {
   box-sizing: border-box;
 }
 
-/* Global Component Styles */
-.input {
+/* Global Element Styles */
+input {
   width: 100%;
   padding: 0.5rem;
   border: none;
@@ -66,17 +69,17 @@ body {
   transition: background-color 0.2s, box-shadow 0.2s;
 }
 
-.input:hover {
+input:hover {
   background-color: var(--color-surface-hover);
 }
 
-.input:focus {
+input:focus {
   outline: none;
   background-color: var(--color-input-focus-bg);
   box-shadow: 0 0 0 2px var(--color-primary);
 }
 
-.btn-icon {
+button {
   padding: 0.25rem 0.75rem;
   border: none;
   background: transparent;
@@ -87,7 +90,7 @@ body {
   transition: background-color 0.2s;
 }
 
-.btn-icon:hover {
+button:hover {
   background-color: var(--color-surface-hover);
 }
 

@@ -97,7 +97,7 @@ const activeTab = computed({
         </div>
       </div>
       <div class="main-content__actions">
-        <button @click="showInfo = !showInfo" class="btn-icon">
+        <button @click="showInfo = !showInfo">
           {{ showInfo ? "Hide Info" : "Info" }}
         </button>
       </div>

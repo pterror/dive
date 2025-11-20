@@ -54,7 +54,4 @@ const points: Point[] = [];
 
 ## Global Styles
 
-- Use global classes for common elements to ensure consistency:
-  - `.input`: Standard text input.
-  - `.btn-icon`: Standard icon button.
 - Avoid scoping these styles to specific components if they are generic.

@@ -35,7 +35,7 @@ function isTagSelected(tagId: string) {
     <div class="sidebar__search">
       <input
         type="text"
-        class="input sidebar__search-input"
+        class="sidebar__search-input"
         placeholder="Search..."
         v-model="searchStore.query"
       />

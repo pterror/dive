@@ -187,9 +187,13 @@ function startDragNode(e: MouseEvent, nodeId: string) {
         }}
       </div>
       <div class="canvas-controls__divider"></div>
-      <button @click="canvas.setZoom(canvas.zoom * 1.1)">+</button>
-      <button @click="canvas.setZoom(1)">Reset</button>
-      <button @click="canvas.setZoom(canvas.zoom * 0.9)">-</button>
+      <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 1.1)">
+        +
+      </button>
+      <button class="btn-icon" @click="canvas.setZoom(1)">Reset</button>
+      <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 0.9)">
+        -
+      </button>
     </div>
   </div>
 </template>
@@ -198,7 +202,7 @@ function startDragNode(e: MouseEvent, nodeId: string) {
 .canvas-container {
   width: 100%;
   height: 100%;
-  background-color: #f3f4f6;
+  background-color: var(--color-bg);
   overflow: hidden;
   position: relative;
   cursor: grab;
@@ -219,8 +223,7 @@ function startDragNode(e: MouseEvent, nodeId: string) {
 
 .canvas-node {
   position: absolute;
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--color-surface);
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   pointer-events: auto; /* Re-enable events for nodes */
@@ -230,10 +233,9 @@ function startDragNode(e: MouseEvent, nodeId: string) {
 }
 
 .canvas-node__header {
-  background: #f9fafb;
+  background: var(--color-surface-hover);
   padding: 0.5rem;
   font-weight: 600;
-  border-bottom: 1px solid #e5e7eb;
   cursor: move;
 }
 
@@ -249,18 +251,10 @@ function startDragNode(e: MouseEvent, nodeId: string) {
   right: 1rem;
   display: flex;
   gap: 0.5rem;
-  background: white;
+  background: var(--color-surface);
   padding: 0.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.canvas-controls button {
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #e5e7eb;
-  background: white;
-  border-radius: 0.25rem;
-  cursor: pointer;
 }
 
 .save-status {
@@ -272,14 +266,14 @@ function startDragNode(e: MouseEvent, nodeId: string) {
 }
 
 .save-status.saved {
-  color: var(--color-success, #10b981);
+  color: var(--color-success);
 }
 
 .save-status.saving {
-  color: var(--color-primary, #3b82f6);
+  color: var(--color-primary);
 }
 
 .save-status.error {
-  color: var(--color-danger, #ef4444);
+  color: var(--color-danger);
 }
 </style>
