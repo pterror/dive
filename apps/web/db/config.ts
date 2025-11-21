@@ -1,4 +1,4 @@
-import { defineDb, defineTable, column } from "astro:db";
+import { column, defineDb, defineTable } from "astro:db";
 
 const Objects = defineTable({
   columns: {

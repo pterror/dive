@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useWorkspaceStore, registry } from "@dive/core";
+import { registry, useWorkspaceStore } from "@dive/core";
 import { FileBrowser } from "@dive/plugin-file-browser";
-import TagManager from "./TagManager.vue";
+import { computed, ref } from "vue";
 import PropertiesPanel from "./PropertiesPanel.vue";
+import TagManager from "./TagManager.vue";
 
 const workspaceStore = useWorkspaceStore();
 const showInfo = ref(false);
@@ -60,15 +60,12 @@ const activeTab = computed({
           :key="obj.id"
           class="main-content__tab"
           :class="{
-            'main-content__tab--active':
-              workspaceStore.activeObject?.id === obj.id,
+            'main-content__tab--active': workspaceStore.activeObject?.id === obj.id,
           }"
           @click="workspaceStore.openObject(obj)"
         >
           {{ obj.name }}
-          <span
-            class="main-content__tab-close"
-            @click.stop="workspaceStore.closeObject(obj.id)"
+          <span class="main-content__tab-close" @click.stop="workspaceStore.closeObject(obj.id)"
             >×</span
           >
         </div>
@@ -90,10 +87,7 @@ const activeTab = computed({
         <FileBrowser v-else />
       </div>
 
-      <aside
-        v-if="showInfo && workspaceStore.activeObject"
-        class="main-content__info"
-      >
+      <aside v-if="showInfo && workspaceStore.activeObject" class="main-content__info">
         <div class="info-panel">
           <div class="info-panel__header">
             <h3>Details</h3>
@@ -183,7 +177,8 @@ const activeTab = computed({
   width: 300px;
   background-color: var(--color-surface);
   /* Border removed, using shadow/bg for separation */
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border-radius: 0.5rem;
   overflow-y: auto;

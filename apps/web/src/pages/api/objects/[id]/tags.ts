@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { db, ObjectTags, Tags, eq, and } from "astro:db";
+import { and, db, eq, ObjectTags, Tags } from "astro:db";
 
 export const prerender = false;
 
@@ -67,9 +67,7 @@ export const DELETE: APIRoute = async ({ params, request }) => {
 
     await db
       .delete(ObjectTags)
-      .where(
-        and(eq(ObjectTags.object_id, objectId), eq(ObjectTags.tag_id, tagId)),
-      );
+      .where(and(eq(ObjectTags.object_id, objectId), eq(ObjectTags.tag_id, tagId)));
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { "Content-Type": "application/json" },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { onMounted, ref, watch } from "vue";
 
 const props = defineProps<{
   objectId: string;
@@ -8,7 +8,7 @@ const props = defineProps<{
 const tags = ref<{ id: string; name: string; color: string }[]>([]);
 const availableTags = ref<{ id: string; name: string; color: string }[]>([]);
 const showAdd = ref(false);
-const newTagName = ref('');
+const newTagName = ref("");
 
 async function fetchObjectTags() {
   try {
@@ -17,34 +17,34 @@ async function fetchObjectTags() {
       tags.value = await res.json();
     }
   } catch (e) {
-    console.error('Failed to fetch object tags:', e);
+    console.error("Failed to fetch object tags:", e);
   }
 }
 
 async function fetchAllTags() {
   try {
-    const res = await fetch('/api/tags');
+    const res = await fetch("/api/tags");
     if (res.ok) {
       availableTags.value = await res.json();
     }
   } catch (e) {
-    console.error('Failed to fetch all tags:', e);
+    console.error("Failed to fetch all tags:", e);
   }
 }
 
 async function addTag(tagId: string) {
   try {
     const res = await fetch(`/api/objects/${props.objectId}/tags`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tagId })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tagId }),
     });
     if (res.ok) {
       await fetchObjectTags();
       showAdd.value = false;
     }
   } catch (e) {
-    console.error('Failed to add tag:', e);
+    console.error("Failed to add tag:", e);
   }
 }
 
@@ -52,41 +52,44 @@ async function createAndAddTag() {
   if (!newTagName.value) return;
   try {
     // Create tag
-    const createRes = await fetch('/api/tags', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: newTagName.value })
+    const createRes = await fetch("/api/tags", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: newTagName.value }),
     });
-    
+
     if (createRes.ok) {
       const newTag = await createRes.json();
       await addTag(newTag.id);
-      newTagName.value = '';
+      newTagName.value = "";
       await fetchAllTags();
     }
   } catch (e) {
-    console.error('Failed to create tag:', e);
+    console.error("Failed to create tag:", e);
   }
 }
 
 async function removeTag(tagId: string) {
   try {
     const res = await fetch(`/api/objects/${props.objectId}/tags`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tagId })
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tagId }),
     });
     if (res.ok) {
       await fetchObjectTags();
     }
   } catch (e) {
-    console.error('Failed to remove tag:', e);
+    console.error("Failed to remove tag:", e);
   }
 }
 
-watch(() => props.objectId, () => {
-  fetchObjectTags();
-});
+watch(
+  () => props.objectId,
+  () => {
+    fetchObjectTags();
+  },
+);
 
 onMounted(() => {
   fetchObjectTags();
@@ -103,8 +106,8 @@ onMounted(() => {
 
     <div v-if="showAdd" class="tag-manager__add-panel">
       <div class="tag-manager__existing">
-        <div 
-          v-for="tag in availableTags" 
+        <div
+          v-for="tag in availableTags"
           :key="tag.id"
           class="tag-manager__option"
           @click="addTag(tag.id)"
@@ -114,11 +117,7 @@ onMounted(() => {
         </div>
       </div>
       <div class="tag-manager__create">
-        <input 
-          v-model="newTagName" 
-          placeholder="New tag..."
-          @keyup.enter="createAndAddTag"
-        />
+        <input v-model="newTagName" placeholder="New tag..." @keyup.enter="createAndAddTag" />
         <button @click="createAndAddTag">Create</button>
       </div>
     </div>
@@ -129,9 +128,7 @@ onMounted(() => {
         {{ tag.name }}
         <span class="tag-remove" @click="removeTag(tag.id)">×</span>
       </div>
-      <div v-if="tags.length === 0" class="tag-manager__empty">
-        No tags
-      </div>
+      <div v-if="tags.length === 0" class="tag-manager__empty">No tags</div>
     </div>
   </div>
 </template>

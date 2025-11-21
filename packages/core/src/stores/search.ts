@@ -47,9 +47,7 @@ export const useSearchStore: StoreDefinition<
 
   function addFilter(filter: Filter): void {
     // Avoid duplicates
-    if (
-      !filters.value.some((f) => f.id === filter.id && f.type === filter.type)
-    ) {
+    if (!filters.value.some((f) => f.id === filter.id && f.type === filter.type)) {
       filters.value.push(filter);
     }
   }
@@ -63,9 +61,7 @@ export const useSearchStore: StoreDefinition<
   }
 
   function toggleFilter(filter: Filter): void {
-    const index = filters.value.findIndex(
-      (f) => f.id === filter.id && f.type === filter.type,
-    );
+    const index = filters.value.findIndex((f) => f.id === filter.id && f.type === filter.type);
     if (index >= 0) {
       filters.value.splice(index, 1);
     } else {

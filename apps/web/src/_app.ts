@@ -1,13 +1,13 @@
-import type { App } from "vue";
-import { createPinia } from "pinia";
 import { registry } from "@dive/core";
-import { FileBrowserPlugin } from "@dive/plugin-file-browser";
-import { MarkdownPlugin } from "@dive/plugin-markdown";
-import { CanvasPlugin } from "@dive/plugin-canvas";
-import { ImagePlugin } from "@dive/plugin-image";
-import { VideoPlugin } from "@dive/plugin-video";
-import { HistoryPlugin } from "@dive/plugin-history";
 import { CalendarPlugin } from "@dive/plugin-calendar";
+import { CanvasPlugin } from "@dive/plugin-canvas";
+import { FileBrowserPlugin } from "@dive/plugin-file-browser";
+import { HistoryPlugin } from "@dive/plugin-history";
+import { ImagePlugin } from "@dive/plugin-image";
+import { MarkdownPlugin } from "@dive/plugin-markdown";
+import { VideoPlugin } from "@dive/plugin-video";
+import { createPinia } from "pinia";
+import type { App } from "vue";
 
 export default (app: App) => {
   const pinia = createPinia();

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Milkdown, useEditor } from "@milkdown/vue";
-import { Editor, rootCtx, defaultValueCtx } from "@milkdown/core";
+import { defaultValueCtx, Editor, rootCtx } from "@milkdown/core";
+import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { nord } from "@milkdown/theme-nord";
-import { listener, listenerCtx } from "@milkdown/plugin-listener";
+import { Milkdown, useEditor } from "@milkdown/vue";
 import { ref } from "vue";
 
 const props = defineProps<{
@@ -20,9 +20,7 @@ async function fetchContent() {
     if (res.ok) {
       const data = await res.json();
       content.value =
-        typeof data.content === "object"
-          ? data.content.content ?? ""
-          : data.content ?? "";
+        typeof data.content === "object" ? (data.content.content ?? "") : (data.content ?? "");
     }
   } catch (e) {
     console.error("Failed to load content", e);

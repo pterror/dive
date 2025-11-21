@@ -1,19 +1,19 @@
-import type { Plugin } from '@dive/core';
-import VideoPlayer from './VideoPlayer.vue';
+import type { Plugin } from "@dive/core";
+import VideoPlayer from "./VideoPlayer.vue";
 
 export const VideoPlugin: Plugin = {
-  name: 'video',
-  version: '0.0.1',
+  name: "video",
+  version: "0.0.1",
   views: [
     {
-      name: 'Video Player',
+      name: "Video Player",
       component: VideoPlayer,
-      supports: ['video', 'video/mp4', 'video/webm']
-    }
+      supports: ["video", "video/mp4", "video/webm"],
+    },
   ],
-  init(_app) {
-    console.log('Video Plugin Initialized');
-  }
+  init() {
+    console.log("Video Plugin Initialized");
+  },
 };
 
 export { VideoPlayer };

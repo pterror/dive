@@ -1,4 +1,4 @@
-import type { ObjectProvider, SearchResult, SearchFilters } from "./types";
+import type { ObjectProvider, SearchFilters, SearchResult } from "./types";
 
 class ObjectRegistry {
   private providers: Map<string, ObjectProvider> = new Map();
@@ -11,10 +11,7 @@ class ObjectRegistry {
     this.providers.delete(providerId);
   }
 
-  async search(
-    query: string,
-    filters?: SearchFilters,
-  ): Promise<SearchResult[]> {
+  async search(query: string, filters?: SearchFilters): Promise<SearchResult[]> {
     const promises = Array.from(this.providers.values()).map((provider) =>
       provider
         .search(query, filters)

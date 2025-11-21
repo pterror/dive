@@ -55,3 +55,35 @@ const points: Point[] = [];
 ## Global Styles
 
 - Avoid scoping these styles to specific components if they are generic.
+
+## Linting & Code Quality
+
+### No Explicit Any
+
+Avoid using `any` type. It defeats the purpose of TypeScript.
+
+- **Bad**: `const data: any = ...`
+- **Good**: `const data: unknown = ...` or define a proper type.
+
+### Iteration
+
+Avoid `forEach`. Use `for...of` loops instead.
+
+- **Bad**:
+  ```ts
+  items.forEach((item) => {
+    // ...
+  });
+  ```
+- **Good**:
+  ```ts
+  for (const item of items) {
+    // ...
+  }
+  ```
+  `for...of` is generally more readable, supports `await`, and works better with `break`/`continue`.
+
+### Tools
+
+- Run `pnpm lint` to check for issues.
+- Run `pnpm format` to auto-format code.

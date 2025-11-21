@@ -1,26 +1,26 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Dive</title>
-	</head>
-	<body class="app">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Dive</title>
+  </head>
+  <body class="app">
     <div class="layout-shell">
       <slot />
     </div>
-	</body>
+  </body>
 </html>
 
 <style>
-.layout-shell {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
+  .layout-shell {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
 </style>

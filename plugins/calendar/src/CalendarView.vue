@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed, ref } from "vue";
 
 const currentDate = ref(new Date());
 
@@ -16,7 +16,7 @@ const firstDayOfMonth = computed(() => {
 });
 
 const monthName = computed(() => {
-  return currentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' });
+  return currentDate.value.toLocaleString("default", { month: "long", year: "numeric" });
 });
 
 const days = computed(() => {
@@ -31,11 +31,19 @@ const days = computed(() => {
 });
 
 function prevMonth() {
-  currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() - 1, 1);
+  currentDate.value = new Date(
+    currentDate.value.getFullYear(),
+    currentDate.value.getMonth() - 1,
+    1,
+  );
 }
 
 function nextMonth() {
-  currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() + 1, 1);
+  currentDate.value = new Date(
+    currentDate.value.getFullYear(),
+    currentDate.value.getMonth() + 1,
+    1,
+  );
 }
 </script>
 
@@ -46,7 +54,7 @@ function nextMonth() {
       <h2 class="calendar-title">{{ monthName }}</h2>
       <button @click="nextMonth" class="calendar-nav">&gt;</button>
     </div>
-    
+
     <div class="calendar-grid">
       <div class="calendar-day-header">Sun</div>
       <div class="calendar-day-header">Mon</div>
@@ -55,10 +63,10 @@ function nextMonth() {
       <div class="calendar-day-header">Thu</div>
       <div class="calendar-day-header">Fri</div>
       <div class="calendar-day-header">Sat</div>
-      
-      <div 
-        v-for="(day, index) in days" 
-        :key="index" 
+
+      <div
+        v-for="(day, index) in days"
+        :key="index"
         class="calendar-day"
         :class="{ 'calendar-day--empty': day === null }"
       >

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 interface HistoryItem {
   readonly id: string;
@@ -10,9 +10,9 @@ interface HistoryItem {
 
 // Mock data
 const history = ref<readonly HistoryItem[]>([
-  { id: '1', title: 'Google', url: 'https://google.com', visitedAt: Date.now() - 100000 },
-  { id: '2', title: 'GitHub', url: 'https://github.com', visitedAt: Date.now() - 200000 },
-  { id: '3', title: 'Vue.js', url: 'https://vuejs.org', visitedAt: Date.now() - 300000 },
+  { id: "1", title: "Google", url: "https://google.com", visitedAt: Date.now() - 100000 },
+  { id: "2", title: "GitHub", url: "https://github.com", visitedAt: Date.now() - 200000 },
+  { id: "3", title: "Vue.js", url: "https://vuejs.org", visitedAt: Date.now() - 300000 },
 ]);
 
 function formatTime(timestamp: number): string {
@@ -23,11 +23,7 @@ function formatTime(timestamp: number): string {
 <template>
   <div class="history-view">
     <div class="history-view__list">
-      <div 
-        v-for="item in history" 
-        :key="item.id" 
-        class="history-item"
-      >
+      <div v-for="item in history" :key="item.id" class="history-item">
         <div class="history-item__content">
           <div class="history-item__title">{{ item.title }}</div>
           <div class="history-item__url">{{ item.url }}</div>

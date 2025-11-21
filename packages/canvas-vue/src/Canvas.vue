@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch } from "vue";
 import { InfiniteCanvas, type Node } from "@dive/canvas";
+import { onMounted, reactive, ref, watch } from "vue";
 
 const props = defineProps<{
   objectId?: string;
@@ -126,10 +126,7 @@ function onMouseUp() {
 function onWheel(e: WheelEvent) {
   e.preventDefault();
   const zoomSpeed = 0.001;
-  const newZoom = Math.max(
-    0.1,
-    Math.min(5, canvas.zoom - e.deltaY * zoomSpeed),
-  );
+  const newZoom = Math.max(0.1, Math.min(5, canvas.zoom - e.deltaY * zoomSpeed));
   canvas.setZoom(newZoom);
 }
 
@@ -182,18 +179,14 @@ function startDragNode(e: MouseEvent, nodeId: string) {
           saveStatus === "saving"
             ? "Saving..."
             : saveStatus === "saved"
-            ? "Saved " + lastSavedTime
-            : "Error"
+              ? "Saved " + lastSavedTime
+              : "Error"
         }}
       </div>
       <div class="canvas-controls__divider"></div>
-      <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 1.1)">
-        +
-      </button>
+      <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 1.1)">+</button>
       <button class="btn-icon" @click="canvas.setZoom(1)">Reset</button>
-      <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 0.9)">
-        -
-      </button>
+      <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 0.9)">-</button>
     </div>
   </div>
 </template>

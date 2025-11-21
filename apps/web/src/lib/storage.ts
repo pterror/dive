@@ -14,13 +14,7 @@ export function getStorageDir(): string {
       );
     }
     case "darwin": {
-      return path.join(
-        home,
-        "Library",
-        "Application Support",
-        "dive",
-        "storage",
-      );
+      return path.join(home, "Library", "Application Support", "dive", "storage");
     }
     default: {
       // Linux / other

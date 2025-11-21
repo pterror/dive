@@ -1,5 +1,5 @@
 import type { App } from "vue";
-import type { Plugin, ObjectType, ViewComponent } from "./plugin";
+import type { ObjectType, Plugin, ViewComponent } from "./plugin";
 
 export class PluginRegistry {
   private plugins: Map<string, Plugin> = new Map();

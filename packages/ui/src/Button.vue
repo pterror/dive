@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
-  variant?: 'primary' | 'secondary'
-}>()
+  variant?: "primary" | "secondary";
+}>();
 </script>
 
 <template>

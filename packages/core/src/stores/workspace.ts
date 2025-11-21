@@ -70,8 +70,7 @@ export const useWorkspaceStore: StoreDefinition<
       openObjects.value.splice(index, 1);
       // If we closed the active object, switch to another one
       if (activeObject.value?.id === id) {
-        activeObject.value =
-          openObjects.value[openObjects.value.length - 1] || null;
+        activeObject.value = openObjects.value[openObjects.value.length - 1] || null;
       }
     }
   }

@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { db, Relations, eq } from "astro:db";
+import { db, eq, Relations } from "astro:db";
 
 export const prerender = false;
 
@@ -14,9 +14,6 @@ export const DELETE: APIRoute = async ({ params }) => {
     });
   } catch (e) {
     console.error("Failed to delete relation:", e);
-    return new Response(
-      JSON.stringify({ error: "Failed to delete relation" }),
-      { status: 500 },
-    );
+    return new Response(JSON.stringify({ error: "Failed to delete relation" }), { status: 500 });
   }
 };

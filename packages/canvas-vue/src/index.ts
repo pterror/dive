@@ -1,2 +1,2 @@
-import Canvas from './Canvas.vue';
+import Canvas from "./Canvas.vue";
 export { Canvas };

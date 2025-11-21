@@ -1,4 +1,4 @@
-import { db, Objects, Tags, ObjectTags } from "astro:db";
+import { db, Objects, ObjectTags, Tags } from "astro:db";
 
 // https://astro.build/db/seed
 export default async function seed() {

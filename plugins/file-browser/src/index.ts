@@ -11,7 +11,7 @@ export const FileBrowserPlugin: Plugin = {
       supports: ["directory"],
     },
   ],
-  init(_app) {
+  init() {
     console.log("File Browser Plugin Initialized");
   },
 };

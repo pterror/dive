@@ -1,24 +1,11 @@
-import {
-  db,
-  Objects,
-  ObjectTags,
-  like,
-  and,
-  inArray,
-  notInArray,
-  sql,
-  eq,
-} from "astro:db";
-import type { ObjectProvider, SearchResult, SearchFilters } from "../types";
+import { and, db, eq, inArray, like, notInArray, Objects, ObjectTags, sql } from "astro:db";
+import type { ObjectProvider, SearchFilters, SearchResult } from "../types";
 
 export class DatabaseProvider implements ObjectProvider {
   id = "database";
   name = "Database";
 
-  async search(
-    query: string,
-    filters?: SearchFilters,
-  ): Promise<SearchResult[]> {
+  async search(query: string, filters?: SearchFilters): Promise<SearchResult[]> {
     const conditions = [];
 
     // Text Query (Multi-word)
@@ -34,9 +21,7 @@ export class DatabaseProvider implements ObjectProvider {
       const tagCount = filters.tags.length;
       // Safe interpolation for tags (assuming strings)
       // We map tags to quoted strings for the IN clause.
-      const tagsString = filters.tags
-        .map((t) => `'${t.replace(/'/g, "''")}'`)
-        .join(", ");
+      const tagsString = filters.tags.map((t) => `'${t.replace(/'/g, "''")}'`).join(", ");
 
       // Subquery to find objects that have ALL the specified tags
       const subquery = sql`(
@@ -53,9 +38,7 @@ export class DatabaseProvider implements ObjectProvider {
     // Untagged Filter
     if (filters?.untagged) {
       // Find objects that are NOT in the ObjectTags table
-      const taggedSubquery = db
-        .select({ id: ObjectTags.object_id })
-        .from(ObjectTags);
+      const taggedSubquery = db.select({ id: ObjectTags.object_id }).from(ObjectTags);
       conditions.push(notInArray(Objects.id, taggedSubquery));
     }
 

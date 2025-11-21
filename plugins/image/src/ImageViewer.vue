@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 // Mock data
-const src = ref('https://picsum.photos/800/600');
+const src = ref("https://picsum.photos/800/600");
 </script>
 
 <template>

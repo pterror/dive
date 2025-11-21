@@ -1,7 +1,7 @@
+import { db, eq, Objects } from "astro:db";
 import { promises as fs } from "fs";
 import path from "path";
-import { db, Objects, eq } from "astro:db";
-import type { ObjectProvider, SearchResult, SearchFilters } from "../types";
+import type { ObjectProvider, SearchFilters, SearchResult } from "../types";
 
 export class FileSystemProvider implements ObjectProvider {
   id = "filesystem";
@@ -12,10 +12,7 @@ export class FileSystemProvider implements ObjectProvider {
     this.rootDir = rootDir;
   }
 
-  async search(
-    query: string,
-    _filters?: SearchFilters,
-  ): Promise<SearchResult[]> {
+  async search(query: string, _filters?: SearchFilters): Promise<SearchResult[]> {
     if (!query || query.length < 2) return []; // Avoid searching for single chars
 
     const results: SearchResult[] = [];
@@ -62,11 +59,7 @@ export class FileSystemProvider implements ObjectProvider {
 
       // Skip node_modules and .git
       if (file.isDirectory()) {
-        if (
-          file.name === "node_modules" ||
-          file.name === ".git" ||
-          file.name === ".gemini"
-        )
+        if (file.name === "node_modules" || file.name === ".git" || file.name === ".gemini")
           continue;
         await this.walk(res, callback);
       } else {
@@ -88,11 +81,7 @@ export class FileSystemProvider implements ObjectProvider {
       // So innerId is filePath.
       // The DB ID should be `filesystem:${filePath}`.
       const dbId = `filesystem:${filePath}`;
-      const dbObj = await db
-        .select()
-        .from(Objects)
-        .where(eq(Objects.id, dbId))
-        .get();
+      const dbObj = await db.select().from(Objects).where(eq(Objects.id, dbId)).get();
 
       return {
         id: filePath, // Registry will prefix this
@@ -123,11 +112,7 @@ export class FileSystemProvider implements ObjectProvider {
     const dbId = `filesystem:${filePath}`;
     const now = Math.floor(Date.now() / 1000);
 
-    const existing = await db
-      .select()
-      .from(Objects)
-      .where(eq(Objects.id, dbId))
-      .get();
+    const existing = await db.select().from(Objects).where(eq(Objects.id, dbId)).get();
 
     if (existing) {
       await db

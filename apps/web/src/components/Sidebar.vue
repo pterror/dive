@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { useSearchStore, useTagStore, useWorkspaceStore } from "@dive/core";
 import { storeToRefs } from "pinia";
-import { useTagStore, useSearchStore, useWorkspaceStore } from "@dive/core";
 import { onMounted } from "vue";
 
 const tagStore = useTagStore();
@@ -61,12 +60,8 @@ function isTagSelected(tagId: string) {
     <div class="sidebar__section">
       <div class="sidebar__section-title">Navigation</div>
       <div class="sidebar__nav">
-        <a href="#" class="sidebar__item" @click.prevent="openView('calendar')">
-          Calendar
-        </a>
-        <a href="#" class="sidebar__item" @click.prevent="openView('history')">
-          History
-        </a>
+        <a href="#" class="sidebar__item" @click.prevent="openView('calendar')"> Calendar </a>
+        <a href="#" class="sidebar__item" @click.prevent="openView('history')"> History </a>
       </div>
     </div>
 
@@ -80,10 +75,7 @@ function isTagSelected(tagId: string) {
           :class="{ 'sidebar__tag--active': isTagSelected(tag.id) }"
           @click="toggleTag(tag)"
         >
-          <span
-            class="sidebar__tag-color"
-            :style="{ backgroundColor: tag.color }"
-          ></span>
+          <span class="sidebar__tag-color" :style="{ backgroundColor: tag.color }"></span>
           <span class="sidebar__tag-name">{{ tag.name }}</span>
         </div>
       </div>

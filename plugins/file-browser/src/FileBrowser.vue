@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from "vue";
-import type { FileObject } from "./types";
-import { Button } from "@dive/ui";
 import { useSearchStore, useWorkspaceStore } from "@dive/core";
+import { Button } from "@dive/ui";
+import { computed, onMounted, ref, watch } from "vue";
+import type { FileObject } from "./types";
 
 const searchStore = useSearchStore();
 const workspaceStore = useWorkspaceStore();
@@ -12,9 +12,7 @@ const recentFiles = ref<readonly FileObject[]>([]);
 const untaggedFiles = ref<readonly FileObject[]>([]);
 const filteredFiles = ref<readonly FileObject[]>([]);
 
-const isHomeView = computed(
-  () => searchStore.filters.length === 0 && !searchStore.query,
-);
+const isHomeView = computed(() => searchStore.filters.length === 0 && !searchStore.query);
 
 // Combined list for search filtering (client-side search on top of server results?)
 // Actually, if we have filters, we fetch filtered results.
@@ -209,18 +207,9 @@ async function handleImportUrl() {
       <div class="file-browser__title-area">
         <div v-if="isHomeView" class="file-browser__title">Home</div>
         <div v-else class="file-browser__filters">
-          <div
-            v-for="filter in searchStore.filters"
-            :key="filter.id"
-            class="filter-chip"
-          >
+          <div v-for="filter in searchStore.filters" :key="filter.id" class="filter-chip">
             <span class="filter-chip__label">{{ filter.label }}</span>
-            <button
-              class="filter-chip__remove"
-              @click.stop="removeFilter(filter.id)"
-            >
-              ×
-            </button>
+            <button class="filter-chip__remove" @click.stop="removeFilter(filter.id)">×</button>
           </div>
           <div v-if="searchStore.query" class="filter-chip filter-chip--query">
             "{{ searchStore.query }}"
@@ -228,12 +217,7 @@ async function handleImportUrl() {
         </div>
       </div>
       <div class="file-browser__actions">
-        <input
-          type="file"
-          ref="fileInput"
-          style="display: none"
-          @change="handleUpload"
-        />
+        <input type="file" ref="fileInput" style="display: none" @change="handleUpload" />
         <Button variant="secondary" @click="triggerUpload">Upload</Button>
         <Button @click="handleNewItem">New Item</Button>
         <Button variant="secondary" @click="handleImportUrl">Import URL</Button>
@@ -280,12 +264,7 @@ async function handleImportUrl() {
 
       <!-- Filtered View -->
       <div v-else class="file-browser__grid">
-        <div
-          v-for="file in filteredFiles"
-          :key="file.id"
-          class="file-card"
-          @click="navigate(file)"
-        >
+        <div v-for="file in filteredFiles" :key="file.id" class="file-card" @click="navigate(file)">
           <div class="file-card__icon">
             {{ "🏷️" }}
           </div>

@@ -1,19 +1,19 @@
-import type { Plugin } from '@dive/core';
-import { Canvas } from '@dive/canvas-vue';
+import { Canvas } from "@dive/canvas-vue";
+import type { Plugin } from "@dive/core";
 
 export const CanvasPlugin: Plugin = {
-  name: 'canvas',
-  version: '0.0.1',
+  name: "canvas",
+  version: "0.0.1",
   views: [
     {
-      name: 'Infinite Canvas',
+      name: "Infinite Canvas",
       component: Canvas,
-      supports: ['canvas', 'application/x-canvas']
-    }
+      supports: ["canvas", "application/x-canvas"],
+    },
   ],
-  init(_app) {
-    console.log('Canvas Plugin Initialized');
-  }
+  init() {
+    console.log("Canvas Plugin Initialized");
+  },
 };
 
 export { Canvas };

@@ -1,10 +1,10 @@
 import type { APIRoute } from "astro";
-import { objectRegistry } from "../../lib/object/registry";
-import { DatabaseProvider } from "../../lib/object/providers/database";
-import { FileSystemProvider } from "../../lib/object/providers/filesystem";
-import { STORAGE_DIR } from "../../lib/storage";
 import { promises as fs } from "fs";
 import path from "path";
+import { DatabaseProvider } from "../../lib/object/providers/database";
+import { FileSystemProvider } from "../../lib/object/providers/filesystem";
+import { objectRegistry } from "../../lib/object/registry";
+import { STORAGE_DIR } from "../../lib/storage";
 
 export const prerender = false;
 
@@ -31,9 +31,7 @@ export const GET: APIRoute = async ({ request }) => {
       const parsedFilters: readonly any[] = JSON.parse(filtersParam);
       // Convert UI filter format to internal SearchFilters
       // Assuming UI sends array of { type: 'tag', value: '...' }
-      const tags = parsedFilters
-        .filter((f) => f.type === "tag")
-        .map((f) => f.value);
+      const tags = parsedFilters.filter((f) => f.type === "tag").map((f) => f.value);
 
       if (tags.length > 0) {
         filters.tags = tags;
