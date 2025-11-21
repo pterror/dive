@@ -7,10 +7,11 @@ import {
   inArray,
   notInArray,
   sql,
+  eq,
 } from "astro:db";
-import type { SearchProvider, SearchResult, SearchFilters } from "../types";
+import type { ObjectProvider, SearchResult, SearchFilters } from "../types";
 
-export class DatabaseProvider implements SearchProvider {
+export class DatabaseProvider implements ObjectProvider {
   id = "database";
   name = "Database";
 
@@ -83,5 +84,29 @@ export class DatabaseProvider implements SearchProvider {
       provider_id: this.id,
       icon: "database",
     }));
+  }
+
+  async get(id: string): Promise<SearchResult | null> {
+    const obj = await db.select().from(Objects).where(eq(Objects.id, id)).get();
+    if (!obj) return null;
+
+    return {
+      ...obj,
+      properties: obj.properties as Record<string, any>,
+      id: obj.id,
+      provider_id: this.id,
+      icon: "database",
+    };
+  }
+
+  async put(id: string, data: any): Promise<void> {
+    await db
+      .update(Objects)
+      .set({
+        content: data.content,
+        properties: data.properties,
+        updated_at: Math.floor(Date.now() / 1000),
+      })
+      .where(eq(Objects.id, id));
   }
 }

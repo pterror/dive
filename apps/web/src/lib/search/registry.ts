@@ -1,9 +1,9 @@
-import type { SearchProvider, SearchResult, SearchFilters } from "./types";
+import type { ObjectProvider, SearchResult, SearchFilters } from "./types";
 
-class SearchRegistry {
-  private providers: Map<string, SearchProvider> = new Map();
+class ObjectRegistry {
+  private providers: Map<string, ObjectProvider> = new Map();
 
-  register(provider: SearchProvider) {
+  register(provider: ObjectProvider) {
     this.providers.set(provider.id, provider);
   }
 
@@ -34,6 +34,43 @@ class SearchRegistry {
     const results = await Promise.all(promises);
     return results.flat();
   }
+
+  async get(fullId: string): Promise<SearchResult | null> {
+    const match = fullId.match(/^([^:]+):(.+)$/);
+    if (!match) return null;
+
+    const [, providerId, innerId] = match;
+
+    const provider = this.providers.get(providerId);
+    if (!provider) return null;
+
+    const result = await provider.get(innerId);
+    if (result) {
+      // Ensure ID is prefixed (though provider might return raw ID)
+      // Actually, provider.get should probably return the object with its own ID logic?
+      // But consistent with search, we should probably ensure prefixing here if we want consistency.
+      // However, for `get`, the caller usually already knows the full ID.
+      // Let's just ensure the returned object has the full ID.
+      return {
+        ...result,
+        id: fullId,
+        provider_id: providerId,
+      };
+    }
+    return null;
+  }
+
+  async put(fullId: string, data: any): Promise<void> {
+    const match = fullId.match(/^([^:]+):(.+)$/);
+    if (!match) throw new Error("Invalid ID");
+
+    const [, providerId, innerId] = match;
+
+    const provider = this.providers.get(providerId);
+    if (!provider) throw new Error("Provider not found");
+
+    await provider.put(innerId, data);
+  }
 }
 
-export const searchRegistry = new SearchRegistry();
+export const objectRegistry = new ObjectRegistry();

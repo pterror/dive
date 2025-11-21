@@ -1,17 +1,12 @@
-import { defineConfig } from 'astro/config';
-import vue from '@astrojs/vue';
-import db from '@astrojs/db';
-import node from '@astrojs/node';
+import { defineConfig } from "astro/config";
+import vue from "@astrojs/vue";
+import db from "@astrojs/db";
+import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
   adapter: node({
-    mode: 'standalone'
+    mode: "standalone",
   }),
-  integrations: [
-    vue({
-      appEntrypoint: '/src/_app.ts'
-    }),
-    db()
-  ]
+  integrations: [vue({ appEntrypoint: "/src/_app.ts" }), db()],
 });

@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { searchRegistry } from "../../lib/search/registry";
+import { objectRegistry } from "../../lib/search/registry";
 import { DatabaseProvider } from "../../lib/search/providers/database";
 import { FileSystemProvider } from "../../lib/search/providers/filesystem";
 import { STORAGE_DIR } from "../../lib/storage";
@@ -11,8 +11,8 @@ export const prerender = false;
 // Register providers (Idempotent-ish, or done at startup.
 // Since this is a serverless function context potentially, we register here to be safe)
 // In a real app, might want a singleton init.
-searchRegistry.register(new DatabaseProvider());
-searchRegistry.register(new FileSystemProvider(STORAGE_DIR));
+objectRegistry.register(new DatabaseProvider());
+objectRegistry.register(new FileSystemProvider(STORAGE_DIR));
 
 export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url);
@@ -44,7 +44,7 @@ export const GET: APIRoute = async ({ request }) => {
   }
 
   // Perform Search
-  let results = await searchRegistry.search(queryParam, filters);
+  let results = await objectRegistry.search(queryParam, filters);
 
   // Post-processing (Sort & Limit)
   // Note: Ideally providers handle sort/limit, but for MVP aggregation:
