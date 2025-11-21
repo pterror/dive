@@ -2,8 +2,8 @@ export interface SearchResult {
   id: string;
   type: string;
   name: string;
-  content?: string;
-  properties?: Record<string, any>;
+  content?: unknown;
+  properties?: Record<string, unknown>;
   created_at?: number;
   updated_at?: number;
   // Metadata for the UI to know where this came from

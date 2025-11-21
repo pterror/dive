@@ -7,14 +7,14 @@
     "./db": "./src/db/client.ts"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "pinia": "^2.1.0",
-    "vue": "^3.3.0"
+    "pinia": "catalog:",
+    "vue": "catalog:"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.0",
-    "typescript": "^5.0.0"
+    "typescript": "catalog:"
   }
 }

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { marked } from 'marked';
+import { computed, ref } from "vue";
+import { marked } from "marked";
 
-const content = ref<string>('# Hello Markdown\n\nStart typing...');
+const content = ref<string>("# Hello Markdown\n\nStart typing...");
 const isEditing = ref<boolean>(true);
 
 const renderedContent = computed(() => {
-  return marked(content.value);
+  return marked.parse(content.value);
 });
 
 function toggleMode() {
@@ -18,18 +18,18 @@ function toggleMode() {
   <div class="markdown-editor">
     <div class="markdown-editor__toolbar">
       <button @click="toggleMode" class="markdown-editor__toggle">
-        {{ isEditing ? 'Preview' : 'Edit' }}
+        {{ isEditing ? "Preview" : "Edit" }}
       </button>
     </div>
-    
+
     <div v-if="isEditing" class="markdown-editor__edit">
-      <textarea 
-        v-model="content" 
+      <textarea
+        v-model="content"
         class="markdown-editor__textarea"
         placeholder="Type markdown here..."
       ></textarea>
     </div>
-    
+
     <div v-else class="markdown-editor__preview" v-html="renderedContent"></div>
   </div>
 </template>
@@ -74,9 +74,5 @@ function toggleMode() {
   background: transparent;
   color: var(--color-text);
   outline: none;
-}
-
-.markdown-editor__preview {
-  prose-width: 65ch;
 }
 </style>

@@ -3,17 +3,18 @@
   "version": "0.0.1",
   "main": "src/index.ts",
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build"
+    "build": "vue-tsc --noEmit && vite build",
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@dive/core": "workspace:*",
     "@dive/ui": "workspace:*",
-    "vue": "^3.3.0",
+    "vue": "catalog:",
     "marked": "^11.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "vite": "^6.0.0",
-    "vue-tsc": "^2.0.0"
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vue-tsc": "catalog:"
   }
 }
