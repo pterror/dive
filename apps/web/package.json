@@ -8,7 +8,7 @@
     "build": "ASTRO_DATABASE_FILE=dive.db astro build",
     "preview": "ASTRO_DATABASE_FILE=dive.db astro preview",
     "astro": "astro",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "astro check"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",

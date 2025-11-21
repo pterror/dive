@@ -11,7 +11,10 @@ class ObjectRegistry {
     this.providers.delete(providerId);
   }
 
-  async search(query: string, filters?: SearchFilters): Promise<SearchResult[]> {
+  async search(
+    query: string,
+    filters?: SearchFilters,
+  ): Promise<SearchResult[]> {
     const promises = Array.from(this.providers.values()).map((provider) =>
       provider
         .search(query, filters)
@@ -58,7 +61,7 @@ class ObjectRegistry {
     return null;
   }
 
-  async put(fullId: string, data: any): Promise<void> {
+  async put(fullId: string, data: unknown): Promise<void> {
     const match = fullId.match(/^([^:]+):(.+)$/);
     if (!match) throw new Error("Invalid ID");
 

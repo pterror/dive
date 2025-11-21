@@ -5,6 +5,7 @@ import { DatabaseProvider } from "../../lib/object/providers/database";
 import { FileSystemProvider } from "../../lib/object/providers/filesystem";
 import { objectRegistry } from "../../lib/object/registry";
 import { STORAGE_DIR } from "../../lib/storage";
+import type { SearchFilters } from "../../lib/object/types";
 
 export const prerender = false;
 
@@ -22,16 +23,19 @@ export const GET: APIRoute = async ({ request }) => {
   const queryParam = url.searchParams.get("q") || "";
   const untagged = url.searchParams.get("untagged") === "true";
 
-  const filters: any = {};
+  const filters: SearchFilters = {};
   if (untagged) {
     filters.untagged = true;
   }
   if (filtersParam) {
     try {
-      const parsedFilters: readonly any[] = JSON.parse(filtersParam);
+      const parsedFilters: readonly { type: string; value: string }[] =
+        JSON.parse(filtersParam);
       // Convert UI filter format to internal SearchFilters
       // Assuming UI sends array of { type: 'tag', value: '...' }
-      const tags = parsedFilters.filter((f) => f.type === "tag").map((f) => f.value);
+      const tags = parsedFilters
+        .filter((f) => f.type === "tag")
+        .map((f) => f.value);
 
       if (tags.length > 0) {
         filters.tags = tags;

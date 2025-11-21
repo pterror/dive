@@ -14,20 +14,20 @@ export class PluginRegistry {
     this.plugins.set(plugin.name, plugin);
 
     if (plugin.types) {
-      plugin.types.forEach((type) => {
+      for (const type of plugin.types) {
         this.types.set(type.name, type);
-      });
+      }
     }
 
     if (plugin.views) {
-      plugin.views.forEach((view) => {
-        view.supports.forEach((type) => {
+      for (const view of plugin.views) {
+        for (const type of view.supports) {
           if (!this.views.has(type)) {
             this.views.set(type, []);
           }
           this.views.get(type)?.push(view);
-        });
-      });
+        }
+      }
     }
   }
 

@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import type { DiveObject, EnrichedRelation } from "@dive/core";
 import { computed, onMounted, ref, watch } from "vue";
 
 const props = defineProps<{
   objectId: string;
 }>();
 
-const properties = ref<Record<string, any>>({});
-const relations = ref<any[]>([]);
-const allObjects = ref<any[]>([]);
+const properties = ref<Record<string, unknown>>({});
+const relations = ref<readonly EnrichedRelation[]>([]);
+const allObjects = ref<readonly DiveObject[]>([]);
 
 const newKey = ref("");
 const newValue = ref("");
@@ -116,7 +117,7 @@ async function removeRelation(id: string) {
   }
 }
 
-function updateProperty(key: string, value: any) {
+function updateProperty(key: string, value: unknown) {
   properties.value[key] = value;
   saveProperties();
 }
@@ -151,12 +152,16 @@ const availableTargets = computed(() => {
       <div v-for="(value, key) in properties" :key="key" class="property-item">
         <div class="property-item__header">
           <span class="property-item__key">{{ key }}</span>
-          <button class="property-item__remove" @click="removeProperty(key)">×</button>
+          <button class="property-item__remove" @click="removeProperty(key)">
+            ×
+          </button>
         </div>
         <input
           class="property-item__input"
           :value="value"
-          @change="(e) => updateProperty(key, (e.target as HTMLInputElement).value)"
+          @change="
+            (e) => updateProperty(key, (e.target as HTMLInputElement).value)
+          "
         />
       </div>
 
@@ -167,12 +172,21 @@ const availableTargets = computed(() => {
         class="property-item property-item--relation"
       >
         <div class="property-item__header">
-          <span class="property-item__key property-item__key--link">{{ relation.type }}</span>
-          <button class="property-item__remove" @click="removeRelation(relation.id)">×</button>
+          <span class="property-item__key property-item__key--link">{{
+            relation.type
+          }}</span>
+          <button
+            class="property-item__remove"
+            @click="removeRelation(relation.id)"
+          >
+            ×
+          </button>
         </div>
         <div class="property-item__link">
           <span class="link-icon">🔗</span>
-          <span class="link-name">{{ relation.otherObject?.name || "Unknown" }}</span>
+          <span class="link-name">{{
+            relation.otherObject?.name || "Unknown"
+          }}</span>
           <span class="link-type">({{ relation.otherObject?.type }})</span>
         </div>
       </div>
@@ -180,8 +194,18 @@ const availableTargets = computed(() => {
 
     <div class="properties-panel__add">
       <div class="add-mode-switch">
-        <button :class="{ active: addMode === 'text' }" @click="addMode = 'text'">Text</button>
-        <button :class="{ active: addMode === 'link' }" @click="addMode = 'link'">Link</button>
+        <button
+          :class="{ active: addMode === 'text' }"
+          @click="addMode = 'text'"
+        >
+          Text
+        </button>
+        <button
+          :class="{ active: addMode === 'link' }"
+          @click="addMode = 'link'"
+        >
+          Link
+        </button>
       </div>
 
       <div class="add-inputs">
@@ -200,14 +224,20 @@ const availableTargets = computed(() => {
           @keyup.enter="addProperty"
         />
 
-        <select v-else v-model="selectedTargetId" class="properties-panel__select">
+        <select
+          v-else
+          v-model="selectedTargetId"
+          class="properties-panel__select"
+        >
           <option value="" disabled>Select Target</option>
           <option v-for="obj in availableTargets" :key="obj.id" :value="obj.id">
             {{ obj.name }}
           </option>
         </select>
 
-        <button class="properties-panel__add-btn" @click="addProperty">+</button>
+        <button class="properties-panel__add-btn" @click="addProperty">
+          +
+        </button>
       </div>
     </div>
   </div>

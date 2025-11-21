@@ -12,7 +12,9 @@ const recentFiles = ref<readonly FileObject[]>([]);
 const untaggedFiles = ref<readonly FileObject[]>([]);
 const filteredFiles = ref<readonly FileObject[]>([]);
 
-const isHomeView = computed(() => searchStore.filters.length === 0 && !searchStore.query);
+const isHomeView = computed(
+  () => searchStore.filters.length === 0 && !searchStore.query,
+);
 
 // Combined list for search filtering (client-side search on top of server results?)
 // Actually, if we have filters, we fetch filtered results.
@@ -62,15 +64,24 @@ async function fetchFilteredData() {
   }
 }
 
-function mapFiles(data: any[]): FileObject[] {
-  return data.map((obj: any) => ({
-    id: obj.id,
-    name: obj.name,
-    path: obj.content?.path || "", // Read from content.path for external, or empty for internal
-    type: obj.type,
-    isDirectory: false, // No folders anymore
-    updatedAt: obj.updated_at * 1000,
-  }));
+function mapFiles(data: unknown[]): FileObject[] {
+  return data.map((obj: unknown) => {
+    const item = obj as {
+      id: string;
+      name: string;
+      content?: { path?: string };
+      type: string;
+      updated_at: number;
+    };
+    return {
+      id: item.id,
+      name: item.name,
+      path: item.content?.path || "", // Read from content.path for external, or empty for internal
+      type: item.type,
+      isDirectory: false, // No folders anymore
+      updatedAt: item.updated_at * 1000,
+    };
+  });
 }
 
 async function refresh() {
@@ -207,9 +218,18 @@ async function handleImportUrl() {
       <div class="file-browser__title-area">
         <div v-if="isHomeView" class="file-browser__title">Home</div>
         <div v-else class="file-browser__filters">
-          <div v-for="filter in searchStore.filters" :key="filter.id" class="filter-chip">
+          <div
+            v-for="filter in searchStore.filters"
+            :key="filter.id"
+            class="filter-chip"
+          >
             <span class="filter-chip__label">{{ filter.label }}</span>
-            <button class="filter-chip__remove" @click.stop="removeFilter(filter.id)">×</button>
+            <button
+              class="filter-chip__remove"
+              @click.stop="removeFilter(filter.id)"
+            >
+              &times;
+            </button>
           </div>
           <div v-if="searchStore.query" class="filter-chip filter-chip--query">
             "{{ searchStore.query }}"
@@ -217,10 +237,17 @@ async function handleImportUrl() {
         </div>
       </div>
       <div class="file-browser__actions">
-        <input ref="fileInput" type="file" style="display: none" @change="handleUpload" />
+        <input
+          ref="fileInput"
+          type="file"
+          style="display: none"
+          @change="handleUpload"
+        />
         <Button variant="secondary" @click="triggerUpload"> Upload </Button>
         <Button @click="handleNewItem"> New Item </Button>
-        <Button variant="secondary" @click="handleImportUrl"> Import URL </Button>
+        <Button variant="secondary" @click="handleImportUrl">
+          Import URL
+        </Button>
       </div>
     </div>
 
@@ -268,7 +295,12 @@ async function handleImportUrl() {
 
       <!-- Filtered View -->
       <div v-else class="file-browser__grid">
-        <div v-for="file in filteredFiles" :key="file.id" class="file-card" @click="navigate(file)">
+        <div
+          v-for="file in filteredFiles"
+          :key="file.id"
+          class="file-card"
+          @click="navigate(file)"
+        >
           <div class="file-card__icon">
             {{ "🏷️" }}
           </div>

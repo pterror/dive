@@ -3,6 +3,12 @@ export interface Point {
   y: number;
 }
 
+export interface NodeContent {
+  title?: string;
+  content?: string;
+  src?: string;
+}
+
 export interface Node {
   id: string;
   x: number;
@@ -10,7 +16,7 @@ export interface Node {
   width: number;
   height: number;
   type: string;
-  data?: any;
+  data?: NodeContent;
 }
 
 export interface Edge {

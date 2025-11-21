@@ -9,8 +9,8 @@ interface WorkspaceStore {
       readonly type: string;
       readonly name: string;
       readonly path?: string;
-      readonly content?: any;
-      readonly metadata?: Record<string, any>;
+      readonly content?: unknown;
+      readonly metadata?: Record<string, unknown>;
     } | null,
     | DiveObject
     | {
@@ -18,8 +18,8 @@ interface WorkspaceStore {
         readonly type: string;
         readonly name: string;
         readonly path?: string;
-        readonly content?: any;
-        readonly metadata?: Record<string, any>;
+        readonly content?: unknown;
+        readonly metadata?: Record<string, unknown>;
       }
     | null
   >;
@@ -29,8 +29,8 @@ interface WorkspaceStore {
       readonly type: string;
       readonly name: string;
       readonly path?: string;
-      readonly content?: any;
-      readonly metadata?: Record<string, any>;
+      readonly content?: unknown;
+      readonly metadata?: Record<string, unknown>;
     }[],
     | DiveObject[]
     | {
@@ -38,8 +38,8 @@ interface WorkspaceStore {
         readonly type: string;
         readonly name: string;
         readonly path?: string;
-        readonly content?: any;
-        readonly metadata?: Record<string, any>;
+        readonly content?: unknown;
+        readonly metadata?: Record<string, unknown>;
       }[]
   >;
   openObject: (obj: DiveObject) => void;
@@ -70,7 +70,8 @@ export const useWorkspaceStore: StoreDefinition<
       openObjects.value.splice(index, 1);
       // If we closed the active object, switch to another one
       if (activeObject.value?.id === id) {
-        activeObject.value = openObjects.value[openObjects.value.length - 1] || null;
+        activeObject.value =
+          openObjects.value[openObjects.value.length - 1] || null;
       }
     }
   }

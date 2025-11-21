@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { db, eq, Objects, or, Relations } from "astro:db";
+import type { EnrichedRelation } from "@dive/core";
 
 export const prerender = false;
 
@@ -20,7 +21,12 @@ export const GET: APIRoute = async ({ params }) => {
     const relations = await db
       .select()
       .from(Relations)
-      .where(or(eq(Relations.source_id, objectId), eq(Relations.target_id, objectId)));
+      .where(
+        or(
+          eq(Relations.source_id, objectId),
+          eq(Relations.target_id, objectId),
+        ),
+      );
 
     // Now let's enrich this data.
 
@@ -34,10 +40,17 @@ export const GET: APIRoute = async ({ params }) => {
     // The UI can fetch the object details or we can do it here.
     // Let's try to do it here for better DX.
 
-    const enrichedRelations = [];
+    const enrichedRelations: EnrichedRelation[] = [];
     for (const relation of relations) {
-      const otherId = relation.source_id === objectId ? relation.target_id : relation.source_id;
-      const otherObject = await db.select().from(Objects).where(eq(Objects.id, otherId)).get();
+      const otherId =
+        relation.source_id === objectId
+          ? relation.target_id
+          : relation.source_id;
+      const otherObject = await db
+        .select()
+        .from(Objects)
+        .where(eq(Objects.id, otherId))
+        .get();
 
       if (otherObject) {
         enrichedRelations.push({
@@ -57,6 +70,9 @@ export const GET: APIRoute = async ({ params }) => {
     });
   } catch (e) {
     console.error("Failed to fetch relations:", e);
-    return new Response(JSON.stringify({ error: "Failed to fetch relations" }), { status: 500 });
+    return new Response(
+      JSON.stringify({ error: "Failed to fetch relations" }),
+      { status: 500 },
+    );
   }
 };

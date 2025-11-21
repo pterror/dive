@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { InfiniteCanvas, type Node } from "@dive/canvas";
+import { InfiniteCanvas } from "@dive/canvas";
 import { onMounted, reactive, ref, watch } from "vue";
 
 const props = defineProps<{
@@ -22,7 +22,9 @@ onMounted(async () => {
       if (res.ok) {
         const data = await res.json();
         if (data.content && data.content.nodes) {
-          data.content.nodes.forEach((n: Node) => canvas.addNode(n));
+          for (const n of data.content.nodes) {
+            canvas.addNode(n);
+          }
         }
       }
     } catch (e) {
@@ -126,7 +128,10 @@ function onMouseUp() {
 function onWheel(e: WheelEvent) {
   e.preventDefault();
   const zoomSpeed = 0.001;
-  const newZoom = Math.max(0.1, Math.min(5, canvas.zoom - e.deltaY * zoomSpeed));
+  const newZoom = Math.max(
+    0.1,
+    Math.min(5, canvas.zoom - e.deltaY * zoomSpeed),
+  );
   canvas.setZoom(newZoom);
 }
 
@@ -167,10 +172,10 @@ function startDragNode(e: MouseEvent, nodeId: string) {
         @mousedown="(e) => startDragNode(e, node.id)"
       >
         <div class="canvas-node__header">
-          {{ node.data?.title || "Node" }}
+          {{ node.data?.title ?? "Node" }}
         </div>
         <div class="canvas-node__content">
-          {{ node.data?.content || node.type }}
+          {{ node.data?.content ?? node.type }}
         </div>
       </div>
     </div>
@@ -186,9 +191,13 @@ function startDragNode(e: MouseEvent, nodeId: string) {
         }}
       </div>
       <div class="canvas-controls__divider" />
-      <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 1.1)">+</button>
+      <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 1.1)">
+        +
+      </button>
       <button class="btn-icon" @click="canvas.setZoom(1)">Reset</button>
-      <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 0.9)">-</button>
+      <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 0.9)">
+        -
+      </button>
     </div>
   </div>
 </template>
