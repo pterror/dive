@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
-import { objectRegistry } from "../../lib/search/registry";
-import { DatabaseProvider } from "../../lib/search/providers/database";
-import { FileSystemProvider } from "../../lib/search/providers/filesystem";
+import { objectRegistry } from "../../lib/object/registry";
+import { DatabaseProvider } from "../../lib/object/providers/database";
+import { FileSystemProvider } from "../../lib/object/providers/filesystem";
 import { STORAGE_DIR } from "../../lib/storage";
 import { promises as fs } from "fs";
 import path from "path";

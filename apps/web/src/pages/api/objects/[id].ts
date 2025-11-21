@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { objectRegistry } from "../../../lib/search/registry";
+import { objectRegistry } from "../../../lib/object/registry";
 
 export const prerender = false;
 

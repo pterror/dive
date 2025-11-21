@@ -5,17 +5,29 @@ export function getStorageDir(): string {
   const home = os.homedir();
 
   // Use standard XDG-like paths or platform specific conventions
-  if (process.platform === "win32") {
-    return path.join(
-      process.env.APPDATA || path.join(home, "AppData", "Roaming"),
-      "dive",
-      "storage",
-    );
-  } else if (process.platform === "darwin") {
-    return path.join(home, "Library", "Application Support", "dive", "storage");
-  } else {
-    // Linux / other
-    return path.join(home, ".local", "share", "dive", "storage");
+  switch (process.platform) {
+    case "win32": {
+      return path.join(
+        process.env.APPDATA || path.join(home, "AppData", "Roaming"),
+        "dive",
+        "storage",
+      );
+    }
+    case "darwin": {
+      return path.join(
+        home,
+        "Library",
+        "Application Support",
+        "dive",
+        "storage",
+      );
+    }
+    default: {
+      // Linux / other
+      const xdgDataHome = process.env.XDG_DATA_HOME;
+      const baseDir = xdgDataHome || path.join(home, ".local", "share");
+      return path.join(baseDir, "dive", "storage");
+    }
   }
 }
 
