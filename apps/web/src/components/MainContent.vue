@@ -14,40 +14,10 @@ const activeView = computed(() => {
 
   const views = registry.getViewsForType(activeObj.type);
   if (views.length > 0) {
-    return views[0].component;
+    return views[0]?.component ?? FileBrowser;
   }
 
   return FileBrowser; // Fallback
-});
-
-const activeTab = computed({
-  get: () => workspaceStore.activeObject?.id || "files",
-  set: (val) => {
-    if (val === "files") {
-      workspaceStore.activeObject = null;
-    } else if (val === "calendar") {
-      workspaceStore.activeObject = {
-        id: "calendar",
-        type: "calendar",
-        name: "Calendar",
-      };
-    } else if (val === "history") {
-      workspaceStore.activeObject = {
-        id: "history",
-        type: "history",
-        name: "History",
-      };
-    } else if (val === "canvas") {
-      workspaceStore.activeObject = {
-        id: "canvas",
-        type: "canvas",
-        name: "Canvas",
-      };
-    } else {
-      const obj = workspaceStore.openObjects.find((o) => o.id === val);
-      if (obj) workspaceStore.activeObject = obj;
-    }
-  },
 });
 </script>
 
@@ -60,17 +30,20 @@ const activeTab = computed({
           :key="obj.id"
           class="main-content__tab"
           :class="{
-            'main-content__tab--active': workspaceStore.activeObject?.id === obj.id,
+            'main-content__tab--active':
+              workspaceStore.activeObject?.id === obj.id,
           }"
           @click="workspaceStore.openObject(obj)"
         >
           {{ obj.name }}
-          <span class="main-content__tab-close" @click.stop="workspaceStore.closeObject(obj.id)"
-            >×</span
+          <span
+            class="main-content__tab-close"
+            @click.stop="workspaceStore.closeObject(obj.id)"
+            >&times;</span
           >
         </div>
       </div>
-      <div class="main-content__actions" v-if="workspaceStore.activeObject">
+      <div v-if="workspaceStore.activeObject" class="main-content__actions">
         <button @click="showInfo = !showInfo">
           {{ showInfo ? "Hide Info" : "Info" }}
         </button>
@@ -87,7 +60,10 @@ const activeTab = computed({
         <FileBrowser v-else />
       </div>
 
-      <aside v-if="showInfo && workspaceStore.activeObject" class="main-content__info">
+      <aside
+        v-if="showInfo && workspaceStore.activeObject"
+        class="main-content__info"
+      >
         <div class="info-panel">
           <div class="info-panel__header">
             <h3>Details</h3>

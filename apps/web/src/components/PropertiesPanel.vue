@@ -207,7 +207,7 @@ const availableTargets = computed(() => {
           </option>
         </select>
 
-        <button @click="addProperty" class="properties-panel__add-btn">+</button>
+        <button class="properties-panel__add-btn" @click="addProperty">+</button>
       </div>
     </div>
   </div>

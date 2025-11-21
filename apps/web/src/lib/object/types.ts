@@ -23,5 +23,5 @@ export interface ObjectProvider {
   name: string;
   search(query: string, filters?: SearchFilters): Promise<SearchResult[]>;
   get(id: string): Promise<SearchResult | null>;
-  put(id: string, data: any): Promise<void>;
+  put(id: string, data: unknown): Promise<void>;
 }

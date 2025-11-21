@@ -50,10 +50,10 @@ function isTagSelected(tagId: string) {
 
     <div class="sidebar__search">
       <input
+        v-model="searchStore.query"
         type="text"
         class="sidebar__search-input"
         placeholder="Search..."
-        v-model="searchStore.query"
       />
     </div>
 
@@ -75,7 +75,7 @@ function isTagSelected(tagId: string) {
           :class="{ 'sidebar__tag--active': isTagSelected(tag.id) }"
           @click="toggleTag(tag)"
         >
-          <span class="sidebar__tag-color" :style="{ backgroundColor: tag.color }"></span>
+          <span class="sidebar__tag-color" :style="{ backgroundColor: tag.color }" />
           <span class="sidebar__tag-name">{{ tag.name }}</span>
         </div>
       </div>

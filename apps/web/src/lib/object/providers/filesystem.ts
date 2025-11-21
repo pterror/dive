@@ -1,7 +1,7 @@
 import { db, eq, Objects } from "astro:db";
 import { promises as fs } from "fs";
 import path from "path";
-import type { ObjectProvider, SearchFilters, SearchResult } from "../types";
+import type { ObjectProvider, SearchResult } from "../types";
 
 export class FileSystemProvider implements ObjectProvider {
   id = "filesystem";
@@ -12,7 +12,7 @@ export class FileSystemProvider implements ObjectProvider {
     this.rootDir = rootDir;
   }
 
-  async search(query: string, _filters?: SearchFilters): Promise<SearchResult[]> {
+  async search(query: string): Promise<SearchResult[]> {
     if (!query || query.length < 2) return []; // Avoid searching for single chars
 
     const results: SearchResult[] = [];
@@ -59,7 +59,11 @@ export class FileSystemProvider implements ObjectProvider {
 
       // Skip node_modules and .git
       if (file.isDirectory()) {
-        if (file.name === "node_modules" || file.name === ".git" || file.name === ".gemini")
+        if (
+          file.name === "node_modules" ||
+          file.name === ".git" ||
+          file.name === ".gemini"
+        )
           continue;
         await this.walk(res, callback);
       } else {
@@ -81,7 +85,11 @@ export class FileSystemProvider implements ObjectProvider {
       // So innerId is filePath.
       // The DB ID should be `filesystem:${filePath}`.
       const dbId = `filesystem:${filePath}`;
-      const dbObj = await db.select().from(Objects).where(eq(Objects.id, dbId)).get();
+      const dbObj = await db
+        .select()
+        .from(Objects)
+        .where(eq(Objects.id, dbId))
+        .get();
 
       return {
         id: filePath, // Registry will prefix this
@@ -95,7 +103,7 @@ export class FileSystemProvider implements ObjectProvider {
         properties: {
           size: stats.size,
           path: filePath,
-          ...(dbObj?.properties as Record<string, any>),
+          ...(dbObj?.properties as Record<string, unknown>),
         },
         // Merge other DB fields if needed, but FS is source of truth for content
       };
@@ -104,22 +112,30 @@ export class FileSystemProvider implements ObjectProvider {
     }
   }
 
-  async put(id: string, data: any): Promise<void> {
+  async put(id: string, data: unknown): Promise<void> {
+    const { content, properties } = data as {
+      readonly content: string;
+      readonly properties: Record<string, unknown>;
+    };
     const filePath = id;
-    await fs.writeFile(filePath, data.content, "utf-8");
+    await fs.writeFile(filePath, content, "utf-8");
 
     // Upsert metadata to DB
     const dbId = `filesystem:${filePath}`;
     const now = Math.floor(Date.now() / 1000);
 
-    const existing = await db.select().from(Objects).where(eq(Objects.id, dbId)).get();
+    const existing = await db
+      .select()
+      .from(Objects)
+      .where(eq(Objects.id, dbId))
+      .get();
 
     if (existing) {
       await db
         .update(Objects)
         .set({
           updated_at: now,
-          properties: data.properties,
+          properties: properties,
         })
         .where(eq(Objects.id, dbId));
     } else {
@@ -129,7 +145,7 @@ export class FileSystemProvider implements ObjectProvider {
         name: path.basename(filePath),
         created_at: now,
         updated_at: now,
-        properties: data.properties,
+        properties: properties,
       });
     }
   }

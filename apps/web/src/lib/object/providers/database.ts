@@ -1,11 +1,24 @@
-import { and, db, eq, inArray, like, notInArray, Objects, ObjectTags, sql } from "astro:db";
+import {
+  and,
+  db,
+  eq,
+  inArray,
+  like,
+  notInArray,
+  Objects,
+  ObjectTags,
+  sql,
+} from "astro:db";
 import type { ObjectProvider, SearchFilters, SearchResult } from "../types";
 
 export class DatabaseProvider implements ObjectProvider {
   id = "database";
   name = "Database";
 
-  async search(query: string, filters?: SearchFilters): Promise<SearchResult[]> {
+  async search(
+    query: string,
+    filters?: SearchFilters,
+  ): Promise<SearchResult[]> {
     const conditions = [];
 
     // Text Query (Multi-word)
@@ -21,7 +34,9 @@ export class DatabaseProvider implements ObjectProvider {
       const tagCount = filters.tags.length;
       // Safe interpolation for tags (assuming strings)
       // We map tags to quoted strings for the IN clause.
-      const tagsString = filters.tags.map((t) => `'${t.replace(/'/g, "''")}'`).join(", ");
+      const tagsString = filters.tags
+        .map((t) => `'${t.replace(/'/g, "''")}'`)
+        .join(", ");
 
       // Subquery to find objects that have ALL the specified tags
       const subquery = sql`(
@@ -38,7 +53,9 @@ export class DatabaseProvider implements ObjectProvider {
     // Untagged Filter
     if (filters?.untagged) {
       // Find objects that are NOT in the ObjectTags table
-      const taggedSubquery = db.select({ id: ObjectTags.object_id }).from(ObjectTags);
+      const taggedSubquery = db
+        .select({ id: ObjectTags.object_id })
+        .from(ObjectTags);
       conditions.push(notInArray(Objects.id, taggedSubquery));
     }
 
@@ -55,7 +72,7 @@ export class DatabaseProvider implements ObjectProvider {
       .from(Objects);
 
     if (conditions.length > 0) {
-      // @ts-ignore - Drizzle types can be finicky with spread args
+      // @ts-expect-error Drizzle types can be finicky with spread args
       queryBuilder = queryBuilder.where(and(...conditions));
     }
 
@@ -63,7 +80,7 @@ export class DatabaseProvider implements ObjectProvider {
 
     return objects.map((obj) => ({
       ...obj,
-      properties: obj.properties as Record<string, any>,
+      properties: obj.properties as Record<string, unknown>,
       provider_id: this.id,
       icon: "database",
     }));
@@ -75,19 +92,23 @@ export class DatabaseProvider implements ObjectProvider {
 
     return {
       ...obj,
-      properties: obj.properties as Record<string, any>,
+      properties: obj.properties as Record<string, unknown>,
       id: obj.id,
       provider_id: this.id,
       icon: "database",
     };
   }
 
-  async put(id: string, data: any): Promise<void> {
+  async put(id: string, data: unknown): Promise<void> {
+    const { content, properties } = data as {
+      readonly content: string;
+      readonly properties: Record<string, unknown>;
+    };
     await db
       .update(Objects)
       .set({
-        content: data.content,
-        properties: data.properties,
+        content: content,
+        properties: properties,
         updated_at: Math.floor(Date.now() / 1000),
       })
       .where(eq(Objects.id, id));

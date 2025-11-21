@@ -166,7 +166,9 @@ function startDragNode(e: MouseEvent, nodeId: string) {
         }"
         @mousedown="(e) => startDragNode(e, node.id)"
       >
-        <div class="canvas-node__header">{{ node.data?.title || "Node" }}</div>
+        <div class="canvas-node__header">
+          {{ node.data?.title || "Node" }}
+        </div>
         <div class="canvas-node__content">
           {{ node.data?.content || node.type }}
         </div>
@@ -183,7 +185,7 @@ function startDragNode(e: MouseEvent, nodeId: string) {
               : "Error"
         }}
       </div>
-      <div class="canvas-controls__divider"></div>
+      <div class="canvas-controls__divider" />
       <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 1.1)">+</button>
       <button class="btn-icon" @click="canvas.setZoom(1)">Reset</button>
       <button class="btn-icon" @click="canvas.setZoom(canvas.zoom * 0.9)">-</button>

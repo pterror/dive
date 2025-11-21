@@ -22,7 +22,7 @@ export const GET: APIRoute = async ({ request }) => {
   const queryParam = url.searchParams.get("q") || "";
   const untagged = url.searchParams.get("untagged") === "true";
 
-  let filters: any = {};
+  const filters: any = {};
   if (untagged) {
     filters.untagged = true;
   }

@@ -101,7 +101,7 @@ onMounted(() => {
   <div class="tag-manager">
     <div class="tag-manager__header">
       <h3 class="tag-manager__title">Tags</h3>
-      <button @click="showAdd = !showAdd" class="tag-manager__add-btn">+</button>
+      <button class="tag-manager__add-btn" @click="showAdd = !showAdd">+</button>
     </div>
 
     <div v-if="showAdd" class="tag-manager__add-panel">
@@ -112,7 +112,7 @@ onMounted(() => {
           class="tag-manager__option"
           @click="addTag(tag.id)"
         >
-          <span class="tag-dot" :style="{ backgroundColor: tag.color }"></span>
+          <span class="tag-dot" :style="{ backgroundColor: tag.color }" />
           {{ tag.name }}
         </div>
       </div>
@@ -124,7 +124,7 @@ onMounted(() => {
 
     <div class="tag-manager__list">
       <div v-for="tag in tags" :key="tag.id" class="tag-pill">
-        <span class="tag-dot" :style="{ backgroundColor: tag.color }"></span>
+        <span class="tag-dot" :style="{ backgroundColor: tag.color }" />
         {{ tag.name }}
         <span class="tag-remove" @click="removeTag(tag.id)">×</span>
       </div>

@@ -50,9 +50,11 @@ function nextMonth() {
 <template>
   <div class="calendar-view">
     <div class="calendar-header">
-      <button @click="prevMonth" class="calendar-nav">&lt;</button>
-      <h2 class="calendar-title">{{ monthName }}</h2>
-      <button @click="nextMonth" class="calendar-nav">&gt;</button>
+      <button class="calendar-nav" @click="prevMonth">&lt;</button>
+      <h2 class="calendar-title">
+        {{ monthName }}
+      </h2>
+      <button class="calendar-nav" @click="nextMonth">&gt;</button>
     </div>
 
     <div class="calendar-grid">

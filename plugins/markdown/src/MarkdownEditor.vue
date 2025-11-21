@@ -9,7 +9,7 @@ defineProps<{
 
 <template>
   <MilkdownProvider>
-    <MilkdownEditor :object-id="objectId" :key="objectId" />
+    <MilkdownEditor :key="objectId" :object-id="objectId" />
   </MilkdownProvider>
 </template>
 

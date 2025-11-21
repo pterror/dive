@@ -9,7 +9,7 @@ const src = ref(
 
 <template>
   <div class="video-player">
-    <video :src="src" controls class="video-player__video"></video>
+    <video :src="src" controls class="video-player__video" />
   </div>
 </template>
 

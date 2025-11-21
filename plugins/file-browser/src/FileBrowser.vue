@@ -217,10 +217,10 @@ async function handleImportUrl() {
         </div>
       </div>
       <div class="file-browser__actions">
-        <input type="file" ref="fileInput" style="display: none" @change="handleUpload" />
-        <Button variant="secondary" @click="triggerUpload">Upload</Button>
-        <Button @click="handleNewItem">New Item</Button>
-        <Button variant="secondary" @click="handleImportUrl">Import URL</Button>
+        <input ref="fileInput" type="file" style="display: none" @change="handleUpload" />
+        <Button variant="secondary" @click="triggerUpload"> Upload </Button>
+        <Button @click="handleNewItem"> New Item </Button>
+        <Button variant="secondary" @click="handleImportUrl"> Import URL </Button>
       </div>
     </div>
 
@@ -239,7 +239,9 @@ async function handleImportUrl() {
               <div class="file-card__icon">
                 {{ "📄" }}
               </div>
-              <div class="file-card__name">{{ file.name }}</div>
+              <div class="file-card__name">
+                {{ file.name }}
+              </div>
             </div>
           </div>
         </section>
@@ -256,7 +258,9 @@ async function handleImportUrl() {
               <div class="file-card__icon">
                 {{ "❓" }}
               </div>
-              <div class="file-card__name">{{ file.name }}</div>
+              <div class="file-card__name">
+                {{ file.name }}
+              </div>
             </div>
           </div>
         </section>
@@ -268,7 +272,9 @@ async function handleImportUrl() {
           <div class="file-card__icon">
             {{ "🏷️" }}
           </div>
-          <div class="file-card__name">{{ file.name }}</div>
+          <div class="file-card__name">
+            {{ file.name }}
+          </div>
         </div>
       </div>
     </div>

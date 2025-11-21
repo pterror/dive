@@ -20,7 +20,9 @@ async function fetchContent() {
     if (res.ok) {
       const data = await res.json();
       content.value =
-        typeof data.content === "object" ? (data.content.content ?? "") : (data.content ?? "");
+        typeof data.content === "object"
+          ? (data.content.content ?? "")
+          : (data.content ?? "");
     }
   } catch (e) {
     console.error("Failed to load content", e);
@@ -54,7 +56,7 @@ useEditor((root) => {
     .config((ctx) => {
       ctx.set(rootCtx, root);
       ctx.set(defaultValueCtx, content.value);
-      ctx.get(listenerCtx).markdownUpdated((_ctx, markdown, _prevMarkdown) => {
+      ctx.get(listenerCtx).markdownUpdated((_ctx, markdown) => {
         if (!loading.value) {
           saveContent(markdown);
         }

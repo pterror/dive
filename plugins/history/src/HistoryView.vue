@@ -25,10 +25,16 @@ function formatTime(timestamp: number): string {
     <div class="history-view__list">
       <div v-for="item in history" :key="item.id" class="history-item">
         <div class="history-item__content">
-          <div class="history-item__title">{{ item.title }}</div>
-          <div class="history-item__url">{{ item.url }}</div>
+          <div class="history-item__title">
+            {{ item.title }}
+          </div>
+          <div class="history-item__url">
+            {{ item.url }}
+          </div>
         </div>
-        <div class="history-item__time">{{ formatTime(item.visitedAt) }}</div>
+        <div class="history-item__time">
+          {{ formatTime(item.visitedAt) }}
+        </div>
       </div>
     </div>
   </div>
