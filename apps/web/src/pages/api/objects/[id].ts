@@ -150,7 +150,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
       // 1. Write to FS
       try {
         await fs.writeFile(filePath, body.content, "utf-8");
-      } catch (e) {
+      } catch {
         return new Response(JSON.stringify({ error: "File write failed" }), {
           status: 500,
         });
