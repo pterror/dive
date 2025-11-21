@@ -4,10 +4,10 @@ packages:
   - plugins/*
 
 catalog:
-  '@astrojs/db': ^0.18.2
+  '@astrojs/db': ^0.18.3
   '@vitejs/plugin-vue': 6.0.2
-  pinia: ^2.3.1
-  typescript: ^5.0.0
+  pinia: ^3.0.4
+  typescript: 5.9.3
   vite: ^6.0.0
   vue: ^3.5.24
   vue-tsc: ^2.0.0

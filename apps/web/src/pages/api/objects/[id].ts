@@ -4,7 +4,7 @@ import { objectRegistry } from "../../../lib/object/registry";
 export const prerender = false;
 
 export const GET: APIRoute = async ({ params }) => {
-  const fullId = params.id;
+  const fullId = params["id"];
   if (!fullId) {
     return new Response(JSON.stringify({ error: "ID required" }), {
       status: 400,
@@ -32,7 +32,7 @@ export const GET: APIRoute = async ({ params }) => {
 };
 
 export const PUT: APIRoute = async ({ params, request }) => {
-  const fullId = params.id;
+  const fullId = params["id"];
   if (!fullId) {
     return new Response(JSON.stringify({ error: "ID required" }), {
       status: 400,

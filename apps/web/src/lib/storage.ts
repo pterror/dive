@@ -8,7 +8,7 @@ export function getStorageDir(): string {
   switch (process.platform) {
     case "win32": {
       return path.join(
-        process.env.APPDATA || path.join(home, "AppData", "Roaming"),
+        process.env["APPDATA"] || path.join(home, "AppData", "Roaming"),
         "dive",
         "storage",
       );
@@ -24,7 +24,7 @@ export function getStorageDir(): string {
     }
     default: {
       // Linux / other
-      const xdgDataHome = process.env.XDG_DATA_HOME;
+      const xdgDataHome = process.env["XDG_DATA_HOME"];
       const baseDir = xdgDataHome || path.join(home, ".local", "share");
       return path.join(baseDir, "dive", "storage");
     }

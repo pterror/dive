@@ -28,7 +28,7 @@ const ObjectTags = defineTable({
 });
 
 // https://astro.build/db/config
-export const Relations = defineTable({
+const Relations = defineTable({
   columns: {
     id: column.text({ primaryKey: true }),
     source_id: column.text({ references: () => Objects.columns.id }),

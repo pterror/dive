@@ -39,7 +39,8 @@ class ObjectRegistry {
     const match = fullId.match(/^([^:]+):(.+)$/);
     if (!match) return null;
 
-    const [, providerId, innerId] = match;
+    const providerId = match[1]!;
+    const innerId = match[2]!;
 
     const provider = this.providers.get(providerId);
     if (!provider) return null;
@@ -64,7 +65,8 @@ class ObjectRegistry {
     const match = fullId.match(/^([^:]+):(.+)$/);
     if (!match) throw new Error("Invalid ID");
 
-    const [, providerId, innerId] = match;
+    const providerId = match[1]!;
+    const innerId = match[2]!;
 
     const provider = this.providers.get(providerId);
     if (!provider) throw new Error("Provider not found");
