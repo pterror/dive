@@ -101,3 +101,12 @@ button {
     background-color: var(--color-surface-hover);
   }
 }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
