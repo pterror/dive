@@ -131,6 +131,7 @@ const activeTab = computed({
 .main-content__tabs {
   display: flex;
   overflow-x: auto;
+  min-height: 44px; /* Height of a tab (padding + font size + gap) */
 }
 
 .main-content__tab {
