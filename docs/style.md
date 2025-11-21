@@ -56,6 +56,11 @@ const points: Point[] = [];
 
 - Avoid scoping these styles to specific components if they are generic.
 
+## Common Elements
+
+- **Unified Styling**: Styles for common elements (e.g. `a`, `button`, `select`, `input`) should be unified across the entire app in `apps/web/src/styles/global.css`.
+- **Avoid Overrides**: Do not create specific styles for these elements in individual components unless it is a special case (e.g. a primary call-to-action button vs a standard button).
+
 ## Linting & Code Quality
 
 ### No Explicit Any

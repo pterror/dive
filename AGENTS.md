@@ -51,3 +51,5 @@ The system is designed to be agnostic to the type of data it manages, using a pl
 - **Astro + Vue**:
   - We use a **Single App** architecture. Do not try to mount multiple isolated Vue islands if they need to share complex state.
   - Modify `apps/web/src/components/App.vue` for high-level layout changes.
+- **UI Consistency**:
+  - Ensure common elements (`a`, `button`, `input`, etc.) rely on global styles defined in `apps/web/src/styles/global.css` rather than component-scoped styles.
