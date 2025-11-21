@@ -7,11 +7,12 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@dive/core": "workspace:*",
     "@dive/canvas-vue": "workspace:*",
+    "@dive/core": "workspace:*",
     "vue": "catalog:"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vue-tsc": "catalog:"
