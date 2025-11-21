@@ -118,6 +118,87 @@ function navigate(file: FileObject) {
 function removeFilter(id: string) {
   searchStore.removeFilter(id);
 }
+
+// Actions
+const fileInput = ref<HTMLInputElement | null>(null);
+
+function triggerUpload() {
+  fileInput.value?.click();
+}
+
+async function handleUpload(event: Event) {
+  const target = event.target as HTMLInputElement;
+  if (!target.files || target.files.length === 0) return;
+
+  const file = target.files[0];
+  const formData = new FormData();
+  formData.append("action", "upload");
+  formData.append("file", file);
+
+  try {
+    const res = await fetch("/api/objects", {
+      method: "POST",
+      body: formData,
+    });
+    if (res.ok) {
+      await refresh();
+    } else {
+      console.error("Upload failed");
+    }
+  } catch (e) {
+    console.error("Upload error:", e);
+  } finally {
+    // Reset input
+    if (fileInput.value) fileInput.value.value = "";
+  }
+}
+
+async function handleNewItem() {
+  const name = prompt("Enter file name:", "Untitled.md");
+  if (!name) return;
+
+  const formData = new FormData();
+  formData.append("action", "create");
+  formData.append("name", name);
+  formData.append("content", "# " + name);
+
+  try {
+    const res = await fetch("/api/objects", {
+      method: "POST",
+      body: formData,
+    });
+    if (res.ok) {
+      await refresh();
+    } else {
+      console.error("Create failed");
+    }
+  } catch (e) {
+    console.error("Create error:", e);
+  }
+}
+
+async function handleImportUrl() {
+  const url = prompt("Enter URL to import:");
+  if (!url) return;
+
+  const formData = new FormData();
+  formData.append("action", "import");
+  formData.append("url", url);
+
+  try {
+    const res = await fetch("/api/objects", {
+      method: "POST",
+      body: formData,
+    });
+    if (res.ok) {
+      await refresh();
+    } else {
+      console.error("Import failed");
+    }
+  } catch (e) {
+    console.error("Import error:", e);
+  }
+}
 </script>
 
 <template>
@@ -145,8 +226,15 @@ function removeFilter(id: string) {
         </div>
       </div>
       <div class="file-browser__actions">
-        <Button variant="secondary">Upload</Button>
-        <Button>New Item</Button>
+        <input
+          type="file"
+          ref="fileInput"
+          style="display: none"
+          @change="handleUpload"
+        />
+        <Button variant="secondary" @click="triggerUpload">Upload</Button>
+        <Button @click="handleNewItem">New Item</Button>
+        <Button variant="secondary" @click="handleImportUrl">Import URL</Button>
       </div>
     </div>
 

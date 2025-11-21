@@ -73,7 +73,7 @@ const activeTab = computed({
           >
         </div>
       </div>
-      <div class="main-content__actions">
+      <div class="main-content__actions" v-if="workspaceStore.activeObject">
         <button @click="showInfo = !showInfo">
           {{ showInfo ? "Hide Info" : "Info" }}
         </button>
