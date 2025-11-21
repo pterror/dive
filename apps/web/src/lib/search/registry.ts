@@ -16,10 +16,19 @@ class SearchRegistry {
     filters?: SearchFilters,
   ): Promise<SearchResult[]> {
     const promises = Array.from(this.providers.values()).map((provider) =>
-      provider.search(query, filters).catch((err) => {
-        console.error(`Provider ${provider.id} failed:`, err);
-        return [];
-      }),
+      provider
+        .search(query, filters)
+        .then((results) => {
+          return results.map((result) => ({
+            ...result,
+            id: `${provider.id}:${result.id}`,
+            provider_id: provider.id,
+          }));
+        })
+        .catch((err) => {
+          console.error(`Provider ${provider.id} failed:`, err);
+          return [];
+        }),
     );
 
     const results = await Promise.all(promises);

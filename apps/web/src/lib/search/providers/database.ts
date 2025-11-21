@@ -80,7 +80,6 @@ export class DatabaseProvider implements SearchProvider {
     return objects.map((obj) => ({
       ...obj,
       properties: obj.properties as Record<string, any>,
-      id: `${this.id}:${obj.id}`,
       provider_id: this.id,
       icon: "database",
     }));

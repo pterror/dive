@@ -32,7 +32,7 @@ export class FileSystemProvider implements SearchProvider {
         if (name.toLowerCase().includes(lowerQuery)) {
           const stats = await fs.stat(filePath);
           results.push({
-            id: `${this.id}:${filePath}`,
+            id: filePath,
             type: "file",
             name: name,
             content: filePath, // Using path as content for now
@@ -51,7 +51,7 @@ export class FileSystemProvider implements SearchProvider {
       console.error("FS Search Error:", error);
     }
 
-    return results.slice(0, 50); // Limit results
+    return results;
   }
 
   private async walk(dir: string, callback: (path: string) => Promise<void>) {
