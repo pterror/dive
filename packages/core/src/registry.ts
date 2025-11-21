@@ -1,12 +1,12 @@
-import type { App } from 'vue';
-import type { Plugin, ObjectType, ViewComponent } from './plugin';
+import type { App } from "vue";
+import type { Plugin, ObjectType, ViewComponent } from "./plugin";
 
 export class PluginRegistry {
   private plugins: Map<string, Plugin> = new Map();
   private types: Map<string, ObjectType> = new Map();
   private views: Map<string, ViewComponent[]> = new Map();
 
-  register(plugin: Plugin) {
+  register(plugin: Plugin): void {
     if (this.plugins.has(plugin.name)) {
       console.warn(`Plugin ${plugin.name} already registered.`);
       return;
@@ -14,14 +14,14 @@ export class PluginRegistry {
     this.plugins.set(plugin.name, plugin);
 
     if (plugin.types) {
-      plugin.types.forEach(type => {
+      plugin.types.forEach((type) => {
         this.types.set(type.name, type);
       });
     }
 
     if (plugin.views) {
-      plugin.views.forEach(view => {
-        view.supports.forEach(type => {
+      plugin.views.forEach((view) => {
+        view.supports.forEach((type) => {
           if (!this.views.has(type)) {
             this.views.set(type, []);
           }
@@ -31,12 +31,12 @@ export class PluginRegistry {
     }
   }
 
-  initAll(app: App) {
-    this.plugins.forEach(plugin => {
+  initAll(app: App): void {
+    for (const plugin of this.plugins.values()) {
       if (plugin.init) {
         plugin.init(app);
       }
-    });
+    }
   }
 
   getViewsForType(type: string): ViewComponent[] {
@@ -46,7 +46,7 @@ export class PluginRegistry {
   getPluginForType(type: string): Plugin | undefined {
     // Find a plugin that supports this type via its views
     for (const [, plugin] of this.plugins.entries()) {
-      if (plugin.views?.some(view => view.supports.includes(type))) {
+      if (plugin.views?.some((view) => view.supports.includes(type))) {
         return plugin;
       }
     }
@@ -54,4 +54,4 @@ export class PluginRegistry {
   }
 }
 
-export const registry = new PluginRegistry();
+export const registry: PluginRegistry = new PluginRegistry();

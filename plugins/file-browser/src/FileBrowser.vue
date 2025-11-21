@@ -1,4 +1,3 @@
-```vue
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import type { FileObject } from "./types";
@@ -131,6 +130,10 @@ async function handleUpload(event: Event) {
   if (!target.files || target.files.length === 0) return;
 
   const file = target.files[0];
+  if (!file) {
+    console.error("No files found to upload");
+    return;
+  }
   const formData = new FormData();
   formData.append("action", "upload");
   formData.append("file", file);

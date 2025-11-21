@@ -1,27 +1,77 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import type { DiveObject } from '../types';
+import { defineStore, type StoreDefinition } from "pinia";
+import { ref, type Ref } from "vue";
+import type { DiveObject } from "../types";
 
-export const useWorkspaceStore = defineStore('workspace', () => {
+interface WorkspaceStore {
+  activeObject: Ref<
+    {
+      readonly id: string;
+      readonly type: string;
+      readonly name: string;
+      readonly path?: string;
+      readonly content?: any;
+      readonly metadata?: Record<string, any>;
+    } | null,
+    | DiveObject
+    | {
+        readonly id: string;
+        readonly type: string;
+        readonly name: string;
+        readonly path?: string;
+        readonly content?: any;
+        readonly metadata?: Record<string, any>;
+      }
+    | null
+  >;
+  openObjects: Ref<
+    {
+      readonly id: string;
+      readonly type: string;
+      readonly name: string;
+      readonly path?: string;
+      readonly content?: any;
+      readonly metadata?: Record<string, any>;
+    }[],
+    | DiveObject[]
+    | {
+        readonly id: string;
+        readonly type: string;
+        readonly name: string;
+        readonly path?: string;
+        readonly content?: any;
+        readonly metadata?: Record<string, any>;
+      }[]
+  >;
+  openObject: (obj: DiveObject) => void;
+  closeObject: (id: string) => void;
+}
+
+export const useWorkspaceStore: StoreDefinition<
+  "workspace",
+  Pick<WorkspaceStore, "activeObject" | "openObjects">,
+  object,
+  Omit<WorkspaceStore, "activeObject" | "openObjects">
+> = defineStore("workspace", () => {
   const activeObject = ref<DiveObject | null>(null);
   const openObjects = ref<DiveObject[]>([]);
 
-  function openObject(obj: DiveObject) {
+  function openObject(obj: DiveObject): void {
     // Check if already open
-    const existing = openObjects.value.find(o => o.id === obj.id);
+    const existing = openObjects.value.find((o) => o.id === obj.id);
     if (!existing) {
       openObjects.value.push(obj);
     }
     activeObject.value = obj;
   }
 
-  function closeObject(id: string) {
-    const index = openObjects.value.findIndex(o => o.id === id);
+  function closeObject(id: string): void {
+    const index = openObjects.value.findIndex((o) => o.id === id);
     if (index !== -1) {
       openObjects.value.splice(index, 1);
       // If we closed the active object, switch to another one
       if (activeObject.value?.id === id) {
-        activeObject.value = openObjects.value[openObjects.value.length - 1] || null;
+        activeObject.value =
+          openObjects.value[openObjects.value.length - 1] || null;
       }
     }
   }
@@ -30,6 +80,6 @@ export const useWorkspaceStore = defineStore('workspace', () => {
     activeObject,
     openObjects,
     openObject,
-    closeObject
+    closeObject,
   };
 });

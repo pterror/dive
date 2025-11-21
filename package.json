@@ -8,5 +8,8 @@
   },
   "devDependencies": {
     "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@tsconfig/strictest": "^2.0.8"
   }
 }

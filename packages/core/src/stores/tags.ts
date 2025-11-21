@@ -1,5 +1,5 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
+import { defineStore, type StoreDefinition } from "pinia";
+import { ref, type Ref } from "vue";
 
 export interface Tag {
   readonly id: string;
@@ -7,7 +7,30 @@ export interface Tag {
   readonly color?: string;
 }
 
-export const useTagStore = defineStore("tags", () => {
+interface TagStore {
+  tags: Ref<
+    {
+      readonly id: string;
+      readonly name: string;
+      readonly color?: string;
+    }[],
+    | Tag[]
+    | {
+        readonly id: string;
+        readonly name: string;
+        readonly color?: string;
+      }[]
+  >;
+  fetchTags: () => Promise<void>;
+  addTag: (name: string, color?: string) => Promise<void>;
+}
+
+export const useTagStore: StoreDefinition<
+  "tags",
+  Pick<TagStore, "tags">,
+  object,
+  Omit<TagStore, "tags">
+> = defineStore("tags", () => {
   const tags = ref<Tag[]>([]);
 
   async function fetchTags() {

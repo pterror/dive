@@ -4,7 +4,7 @@ import { Editor, rootCtx, defaultValueCtx } from "@milkdown/core";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { nord } from "@milkdown/theme-nord";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 const props = defineProps<{
   objectId: string;

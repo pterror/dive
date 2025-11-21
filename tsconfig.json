@@ -1,20 +1,21 @@
 {
+  "extends": "@tsconfig/strictest/tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "strict": true,
     "jsx": "preserve",
+    "composite": true,
     "importHelpers": true,
-    "experimentalDecorators": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "erasableSyntaxOnly": true,
+    "forceConsistentCasingInFileNames": true,
+    // Vue (VLS) does not support `isolatedDeclarations` as it heavily depends on
+    // type inference.
+    // "isolatedDeclarations": true,
+    "verbatimModuleSyntax": true,
     "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "@dive/*": ["packages/*/src"]
-    }
+    "baseUrl": "."
   },
   "exclude": ["node_modules", "dist"]
 }
