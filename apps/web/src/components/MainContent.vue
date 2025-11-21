@@ -2,12 +2,6 @@
 import { ref, computed } from "vue";
 import { useWorkspaceStore, registry } from "@dive/core";
 import { FileBrowser } from "@dive/plugin-file-browser";
-import { MarkdownEditor } from "@dive/plugin-markdown";
-import { Canvas } from "@dive/plugin-canvas";
-import { ImageViewer } from "@dive/plugin-image";
-import { VideoPlayer } from "@dive/plugin-video";
-import { HistoryView } from "@dive/plugin-history";
-import { CalendarView } from "@dive/plugin-calendar";
 import TagManager from "./TagManager.vue";
 import PropertiesPanel from "./PropertiesPanel.vue";
 
@@ -16,14 +10,8 @@ const showInfo = ref(false);
 
 const activeView = computed(() => {
   const activeObj = workspaceStore.activeObject;
-  if (!activeObj) return FileBrowser; // Default to File Browser
+  if (!activeObj) return FileBrowser;
 
-  // Special case for built-in views if we want to treat them as "objects" or just modes
-  // For now, let's say if no active object, show file browser.
-  // But we also want to be able to switch to "Canvas Mode" or "Calendar Mode".
-  // Let's assume we have a "mode" in the store or we treat these as special objects.
-
-  // For now, let's look up the view based on the object type.
   const views = registry.getViewsForType(activeObj.type);
   if (views.length > 0) {
     return views[0].component;
@@ -32,22 +20,12 @@ const activeView = computed(() => {
   return FileBrowser; // Fallback
 });
 
-// We need to register the plugins somewhere.
-// Since we are in a Vue component, we can't easily do it in `main.ts` of Astro.
-// But we can do it here once or in a separate setup file.
-// For now, let's manually map for the "static" tabs we want to keep available?
-// Actually, the user wants to "replace the static tabs".
-// But we still need a way to get to the File Browser if we are editing a file.
-// Maybe a sidebar action or a "Home" tab?
-// Let's keep a "Home" / "Files" tab always available, and then open tabs for files.
-
 const activeTab = computed({
   get: () => workspaceStore.activeObject?.id || "files",
   set: (val) => {
     if (val === "files") {
       workspaceStore.activeObject = null;
     } else if (val === "calendar") {
-      // Maybe we just set activeObject to a special "calendar" object
       workspaceStore.activeObject = {
         id: "calendar",
         type: "calendar",
@@ -104,32 +82,12 @@ const activeTab = computed({
 
     <div class="main-content__body">
       <div class="main-content__view">
-        <div v-if="!workspaceStore.activeObject" class="main-content__empty">
-          <FileBrowser />
-        </div>
-
-        <div
-          v-else-if="workspaceStore.activeObject.type === 'folder'"
-          class="main-content__folder"
-        >
-          <FileBrowser />
-        </div>
-
-        <div
-          v-else-if="workspaceStore.activeObject.type === 'canvas'"
-          class="main-content__canvas"
-        >
-          <Canvas :object-id="workspaceStore.activeObject.id" />
-        </div>
-
-        <div v-else class="main-content__preview">
-          <div class="preview-placeholder">
-            <h3>{{ workspaceStore.activeObject.name }}</h3>
-            <p>
-              No preview available for {{ workspaceStore.activeObject.type }}
-            </p>
-          </div>
-        </div>
+        <component
+          :is="activeView"
+          v-if="workspaceStore.activeObject"
+          :object-id="workspaceStore.activeObject.id"
+        />
+        <FileBrowser v-else />
       </div>
 
       <aside

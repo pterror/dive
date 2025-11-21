@@ -1,16 +1,33 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
-import { useTagStore, useSearchStore } from "@dive/core";
+import { useTagStore, useSearchStore, useWorkspaceStore } from "@dive/core";
 import { onMounted } from "vue";
 
 const tagStore = useTagStore();
 const { tags } = storeToRefs(tagStore);
 const searchStore = useSearchStore();
+const workspaceStore = useWorkspaceStore();
 
 onMounted(() => {
   tagStore.fetchTags();
 });
+
+function openView(type: string) {
+  if (type === "calendar") {
+    workspaceStore.openObject({
+      id: "calendar",
+      type: "calendar",
+      name: "Calendar",
+    });
+  } else if (type === "history") {
+    workspaceStore.openObject({
+      id: "history",
+      type: "history",
+      name: "History",
+    });
+  }
+}
 
 function toggleTag(tag: { id: string; name: string }) {
   searchStore.toggleFilter({
@@ -39,6 +56,18 @@ function isTagSelected(tagId: string) {
         placeholder="Search..."
         v-model="searchStore.query"
       />
+    </div>
+
+    <div class="sidebar__section">
+      <div class="sidebar__section-title">Navigation</div>
+      <div class="sidebar__nav">
+        <a href="#" class="sidebar__item" @click.prevent="openView('calendar')">
+          Calendar
+        </a>
+        <a href="#" class="sidebar__item" @click.prevent="openView('history')">
+          History
+        </a>
+      </div>
     </div>
 
     <div class="sidebar__section">
