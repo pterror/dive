@@ -2,6 +2,9 @@ import type { APIRoute } from "astro";
 import { searchRegistry } from "../../lib/search/registry";
 import { DatabaseProvider } from "../../lib/search/providers/database";
 import { FileSystemProvider } from "../../lib/search/providers/filesystem";
+import { STORAGE_DIR } from "../../lib/storage";
+import { promises as fs } from "fs";
+import path from "path";
 
 export const prerender = false;
 
@@ -9,7 +12,7 @@ export const prerender = false;
 // Since this is a serverless function context potentially, we register here to be safe)
 // In a real app, might want a singleton init.
 searchRegistry.register(new DatabaseProvider());
-searchRegistry.register(new FileSystemProvider());
+searchRegistry.register(new FileSystemProvider(STORAGE_DIR));
 
 export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url);
@@ -60,17 +63,11 @@ export const GET: APIRoute = async ({ request }) => {
   });
 };
 
-import { promises as fs } from "fs";
-import path from "path";
-
 export const POST: APIRoute = async ({ request }) => {
   try {
     const formData = await request.formData();
     const action = formData.get("action") as string;
-    // Fix path resolution: assume process.cwd() is project root, but check if we are already in apps/web
-    const storageDir = process.cwd().endsWith("apps/web")
-      ? path.join(process.cwd(), "storage")
-      : path.join(process.cwd(), "apps/web/storage");
+    const storageDir = STORAGE_DIR;
 
     // Ensure storage directory exists
     try {
@@ -96,9 +93,22 @@ export const POST: APIRoute = async ({ request }) => {
       if (!file) {
         return new Response("No file provided", { status: 400 });
       }
+
+      const filePath = path.join(storageDir, file.name);
+
+      // Check if file exists
+      try {
+        await fs.access(filePath);
+        // If we get here, file exists
+        return new Response(JSON.stringify({ error: "File already exists" }), {
+          status: 409,
+        });
+      } catch {
+        // File does not exist, proceed
+      }
+
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      const filePath = path.join(storageDir, file.name);
 
       await fs.writeFile(filePath, buffer);
 

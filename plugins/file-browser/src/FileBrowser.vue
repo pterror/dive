@@ -160,7 +160,6 @@ async function handleNewItem() {
   const formData = new FormData();
   formData.append("action", "create");
   formData.append("name", name);
-  formData.append("content", "# " + name);
 
   try {
     const res = await fetch("/api/objects", {

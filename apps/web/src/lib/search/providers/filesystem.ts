@@ -21,6 +21,12 @@ export class FileSystemProvider implements SearchProvider {
     const lowerQuery = query.toLowerCase();
 
     try {
+      try {
+        await fs.access(this.rootDir);
+      } catch {
+        return [];
+      }
+
       await this.walk(this.rootDir, async (filePath) => {
         const name = path.basename(filePath);
         if (name.toLowerCase().includes(lowerQuery)) {
